@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_TestDefinition" Id="{e631d038-4e4a-4dc0-a404-8a4a12f8f78f}">
+    <Declaration><![CDATA[TYPE ST_TestDefinition :
+	STRUCT
+		TestId : T_MaxString;
+		Status : E_TestStatus;
+	END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

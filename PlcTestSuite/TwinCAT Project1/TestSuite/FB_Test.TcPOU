@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_Test" Id="{9e8aece1-ee26-4cf6-b4f4-25a27cfed9dc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Test IMPLEMENTS ITestOperation
+VAR
+	_TestId	  : T_MaxString;
+	_State	  : E_TestStatus;
+	TestEvent : FB_TcAlarm;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AssertEqual" Id="{848da2d4-fc83-435a-a497-3700fbb8f173}">
+      <Declaration><![CDATA[METHOD AssertEqual
+VAR_INPUT
+	Var1 : ANY;
+	Var2 : ANY;
+END_VAR
+
+VAR
+	nCount : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Var1.typeclass <> Var2.typeclass THEN
+	State := E_TestStatus.DoneFailed;
+	ReportAssert();
+	RETURN;
+END_IF
+
+IF Var1.diSize <> Var2.diSize THEN
+	State := E_TestStatus.DoneFailed;
+	ReportAssert();
+	RETURN;
+END_IF
+
+// Byte comparison
+FOR nCount := 0 TO Var2.diSize - 1 DO
+	IF Var1.pvalue[nCount] <> Var2.pvalue[nCount] THEN
+		State := E_TestStatus.DoneFailed;
+		ReportAssert();
+		RETURN;
+	END_IF
+END_FOR
+
+State := E_TestStatus.DoneOk;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ExecuteTest" Id="{d3490801-b397-4b9a-8a9d-6332802fd972}">
+      <Declaration><![CDATA[METHOD ExecuteTest : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF State = E_TestStatus.Init THEN
+	State := E_TestStatus.Running;
+END_IF
+
+ExecuteTest := State = E_TestStatus.Running;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReportAssert" Id="{70613942-8c38-478a-ad8e-0d3b3e114371}">
+      <Declaration><![CDATA[METHOD PRIVATE ReportAssert
+VAR
+	ResultString : T_MaxString;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TestEvent.bRaised THEN
+	TestEvent.Create(eventClass		   := TC_EVENT_CLASSES.TestEvents,
+					 nEventId		   := 1,
+					 eSeverity		   := TcEventSeverity.Error,
+					 bWithConfirmation := FALSE,
+					 ipSourceInfo	   := 0);
+
+	ResultString := CONCAT('Test failed - ', TestId);
+	TestEvent.ipArguments.AddString(ResultString);
+	TestEvent.Raise(0);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="State" Id="{107dda4b-11bf-4131-8c5f-64011be55284}">
+      <Declaration><![CDATA[PROPERTY State :  E_TestStatus]]></Declaration>
+      <Get Name="Get" Id="{262d28c9-71be-4402-bd2c-a86901ea6f86}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[State := _State;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{71ba93ec-d3d4-4f07-892c-f28b00d83612}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_State := State;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TestId" Id="{0723af9d-7a0b-479f-bfbc-daf60795c791}">
+      <Declaration><![CDATA[PROPERTY TestId : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{b9dea5fd-624e-4410-bf21-8a9d9c1236f8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestId := _TestId;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b3f6ef0d-a7cd-4254-a831-4165b3f53021}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_TestId := TestId;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

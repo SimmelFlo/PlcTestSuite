@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="ITestOperation" Id="{08860d6e-c469-4ecd-9c53-2cb76abc1038}">
+    <Declaration><![CDATA[INTERFACE ITestOperation EXTENDS __SYSTEM.IQueryInterface]]></Declaration>
+    <Method Name="AssertEqual" Id="{9c1c2102-a6cd-43d4-b955-8a4e23076c37}">
+      <Declaration><![CDATA[METHOD AssertEqual
+VAR_INPUT
+	Var1 : ANY;
+	Var2 : ANY;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="ExecuteTest" Id="{b962dfa9-06a4-472e-bbe7-928854d9dd2a}">
+      <Declaration><![CDATA[METHOD ExecuteTest : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+    </Method>
+    <Property Name="State" Id="{15265f80-3995-432c-9bc2-2c1127cdc374}">
+      <Declaration><![CDATA[PROPERTY State : E_TestStatus]]></Declaration>
+      <Get Name="Get" Id="{addd4951-db3c-4ab4-85c4-bed3a300a2e3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{09f71b2a-b665-430b-932e-7ad90451fb6e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="TestId" Id="{7a2b531b-1e78-4625-bf6c-a530812e3b3e}">
+      <Declaration><![CDATA[PROPERTY TestId : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{36d24df8-a9ee-41ce-b400-8b72587288f6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{daf96dcf-8df8-4e4e-9750-a5d6e2a7dff9}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

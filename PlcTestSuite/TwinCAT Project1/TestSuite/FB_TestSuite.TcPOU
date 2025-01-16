@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_TestSuite" Id="{d93a9aa9-034f-4b1b-8d51-f63a960f5d15}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TestSuite IMPLEMENTS ITestSuite
+VAR
+	TestCollection	  : ARRAY[0..TestSuite_Parameter.MaxTestCount] OF FB_Test;
+	NoAction		  : FB_Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
+	ActiveTest		  : UDINT;
+	DoneEvent		  : FB_TcAlarm;
+	TotalTestCount	  : UDINT := 0;
+	TotalOkTestCount  : UDINT := 0;
+	TotalNokTestCount : UDINT := 0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Test" Id="{ed26b7b3-1fa1-4dc2-9f0d-d0fab78d1679}">
+      <Declaration><![CDATA[METHOD Test : ITestOperation
+VAR_INPUT
+	TestId : T_MaxString;
+END_VAR
+
+VAR
+	ResultString : T_MaxString;
+	i			 : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO TestSuite_Parameter.MaxTestCount DO
+	// Detect first running test
+	IF TestCollection[i].State = E_TestStatus.Running THEN
+		ActiveTest := i;
+	END_IF
+
+	IF TestCollection[ActiveTest].State >= E_TestStatus.DoneOk THEN
+		ActiveTest := 0;
+	END_IF
+
+	// Get existing Test
+	IF (TestCollection[i].TestId = TestId) THEN
+		IF (ActiveTest = i) OR (ActiveTest = 0) THEN
+			Test := TestCollection[i];
+		ELSE
+			Test := NoAction;
+		END_IF
+
+		EXIT;
+	END_IF
+
+	// Add Test
+	IF TestCollection[i].TestId = '' THEN
+		TestCollection[i].TestId := TestId;
+		Test					 := NoAction;
+		EXIT;
+	END_IF
+
+	// Out of tests
+	IF i = TestSuite_Parameter.MaxTestCount THEN
+		Test := NoAction;
+	END_IF
+END_FOR
+
+// Run Statistic
+TotalTestCount	  := 0;
+TotalOkTestCount  := 0;
+TotalNokTestCount := 0;
+FOR i := 0 TO TestSuite_Parameter.MaxTestCount DO
+	IF TestCollection[i].TestId <> '' THEN
+		TotalTestCount := TotalTestCount + 1;
+		IF TestCollection[i].State = E_TestStatus.DoneOk THEN
+			TotalOkTestCount := TotalOkTestCount + 1;
+		END_IF
+
+		IF TestCollection[i].State = E_TestStatus.DoneFailed THEN
+			TotalNokTestCount := TotalNokTestCount + 1;
+		END_IF
+	END_IF
+END_FOR
+
+// Tests finished
+IF TotalTestCount = (TotalOkTestCount + TotalNokTestCount) THEN
+	IF NOT DoneEvent.bRaised THEN
+		DoneEvent.Create(eventClass		   := TC_EVENT_CLASSES.TestEvents,
+						 nEventId		   := 1,
+						 eSeverity		   := TcEventSeverity.Error,
+						 bWithConfirmation := FALSE,
+						 ipSourceInfo	   := 0);
+
+		ResultString := CONCAT('Test Suite completed: ', CONCAT('Total Tests - ', TO_STRING(TotalTestCount)));
+		ResultString := CONCAT(ResultString, CONCAT(', OK Tests - ', TO_STRING(TotalOkTestCount)));
+		ResultString := CONCAT(ResultString, CONCAT(', Failed Tests - ', TO_STRING(TotalNokTestCount)));
+		DoneEvent.ipArguments.AddString(ResultString);
+		DoneEvent.Raise(0);
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

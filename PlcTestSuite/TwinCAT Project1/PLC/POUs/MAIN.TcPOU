@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{7dbbc5fe-66aa-4f70-a8be-dd1553a601dc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	TestCounter : FB_Counter;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Test_Counter_AddTwo();
+Test_Counter_SubtractTwo();
+Test_Counter_AddMore();
+]]></ST>
+    </Implementation>
+    <Method Name="Test_Counter_AddMore" Id="{0a23e9d2-f7ab-4c19-9735-98437bc044ae}">
+      <Declaration><![CDATA[METHOD Test_Counter_AddMore
+VAR_INST
+	Expected : UDINT;
+	Actual	 : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	Expected := 1;
+	Actual	 := TestCounter.AddTwo(5, -5);
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Counter_AddTwo" Id="{3d2e2d40-a28e-4d42-ab9e-06275a7cf9a4}">
+      <Declaration><![CDATA[METHOD Test_Counter_AddTwo
+VAR_INST
+	Expected : UDINT;
+	Actual	 : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	Expected := 10;
+	Actual	 := TestCounter.AddTwo(5, 5);
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Counter_SubtractTwo" Id="{82b2956c-4118-427f-a450-a3e1dcc4c03a}">
+      <Declaration><![CDATA[METHOD Test_Counter_SubtractTwo
+VAR_INST
+	Expected : UDINT;
+	Actual	 : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	Expected := 0;
+	Actual	 := TestCounter.AddTwo(5, -5);
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

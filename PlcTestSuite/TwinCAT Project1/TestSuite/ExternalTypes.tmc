@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcModuleClass xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance2" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2009/05/TcModuleClass" GeneratedBy="TwinCAT XAE Plc">
+  <DataTypes>
+    <DataType>
+      <Name GUID="{0E3EE943-5C22-43B5-BA32-F2D88FA6AD91}">TestEvents</Name>
+      <DisplayName TxtId=""><![CDATA[EventClass1_DisplayText]]></DisplayName>
+      <EventId>
+        <Name Id="1">TestEvent</Name>
+        <DisplayName TxtId=""><![CDATA[{0}]]></DisplayName>
+        <Severity>Error</Severity>
+      </EventId>
+    </DataType>
+  </DataTypes>
+</TcModuleClass>
