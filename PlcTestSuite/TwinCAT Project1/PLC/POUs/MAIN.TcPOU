@@ -4,18 +4,22 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	TestCounter : FB_Counter;
+	ReRun		: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[Test_Counter_AddTwo();
 Test_Counter_SubtractTwo();
 Test_Counter_AddMore();
-]]></ST>
+IF ReRun THEN
+	TestSuite.ReRunTests();
+	ReRun := FALSE;
+END_IF]]></ST>
     </Implementation>
     <Method Name="Test_Counter_AddMore" Id="{0a23e9d2-f7ab-4c19-9735-98437bc044ae}">
       <Declaration><![CDATA[METHOD Test_Counter_AddMore
 VAR_INST
-	Expected : UDINT;
-	Actual	 : UDINT;
+	Expected : DINT;
+	Actual	 : DINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
@@ -28,8 +32,8 @@ END_IF]]></ST>
     <Method Name="Test_Counter_AddTwo" Id="{3d2e2d40-a28e-4d42-ab9e-06275a7cf9a4}">
       <Declaration><![CDATA[METHOD Test_Counter_AddTwo
 VAR_INST
-	Expected : UDINT;
-	Actual	 : UDINT;
+	Expected : DINT;
+	Actual	 : DINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
@@ -42,8 +46,8 @@ END_IF]]></ST>
     <Method Name="Test_Counter_SubtractTwo" Id="{82b2956c-4118-427f-a450-a3e1dcc4c03a}">
       <Declaration><![CDATA[METHOD Test_Counter_SubtractTwo
 VAR_INST
-	Expected : UDINT;
-	Actual	 : UDINT;
+	Expected : DINT;
+	Actual	 : DINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN

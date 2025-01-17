@@ -3,9 +3,9 @@
   <POU Name="FB_Test" Id="{9e8aece1-ee26-4cf6-b4f4-25a27cfed9dc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Test IMPLEMENTS ITestOperation
 VAR
-	_TestId	  : T_MaxString;
-	_State	  : E_TestStatus;
-	TestEvent : FB_TcAlarm;
+	_TestId		: T_MaxString;
+	_State		: E_TestStatus;
+	TestMessage : FB_TcMessage;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -21,7 +21,9 @@ VAR
 	nCount : DINT;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF Var1.typeclass <> Var2.typeclass THEN
+        <ST><![CDATA[
+
+IF Var1.typeclass <> Var2.typeclass THEN
 	State := E_TestStatus.DoneFailed;
 	ReportAssert();
 	RETURN;
@@ -63,17 +65,14 @@ VAR
 	ResultString : T_MaxString;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TestEvent.bRaised THEN
-	TestEvent.Create(eventClass		   := TC_EVENT_CLASSES.TestEvents,
-					 nEventId		   := 1,
-					 eSeverity		   := TcEventSeverity.Error,
-					 bWithConfirmation := FALSE,
-					 ipSourceInfo	   := 0);
+        <ST><![CDATA[TestMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
+				   nEventId		:= 1,
+				   eSeverity	:= TcEventSeverity.Error,
+				   ipSourceInfo := 0);
 
-	ResultString := CONCAT('Test failed - ', TestId);
-	TestEvent.ipArguments.AddString(ResultString);
-	TestEvent.Raise(0);
-END_IF]]></ST>
+ResultString := CONCAT('Test failed - ', TestId);
+TestMessage.ipArguments.AddString(ResultString);
+TestMessage.Send(0);]]></ST>
       </Implementation>
     </Method>
     <Property Name="State" Id="{107dda4b-11bf-4131-8c5f-64011be55284}">

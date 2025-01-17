@@ -5,15 +5,29 @@
 VAR
 	TestCollection	  : ARRAY[0..TestSuite_Parameter.MaxTestCount] OF FB_Test;
 	NoAction		  : FB_Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
-	ActiveTest		  : UDINT;
-	DoneEvent		  : FB_TcAlarm;
+	ActiveTest		  : DINT;
+	DoneMessage		  : FB_TcMessage;
 	TotalTestCount	  : UDINT := 0;
 	TotalOkTestCount  : UDINT := 0;
 	TotalNokTestCount : UDINT := 0;
+	Complete		  : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="ReRunTests" Id="{149633ad-ed2c-4a71-a7a5-f2bfddf8a7a2}">
+      <Declaration><![CDATA[METHOD ReRunTests
+VAR
+	i : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO TestSuite_Parameter.MaxTestCount DO
+	TestCollection[i].State := E_TestStatus.Init;
+	ActiveTest				:= 0;
+	Complete				:= FALSE;
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Test" Id="{ed26b7b3-1fa1-4dc2-9f0d-d0fab78d1679}">
       <Declaration><![CDATA[METHOD Test : ITestOperation
 VAR_INPUT
@@ -22,7 +36,7 @@ END_VAR
 
 VAR
 	ResultString : T_MaxString;
-	i			 : UDINT;
+	i			 : DINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[FOR i := 0 TO TestSuite_Parameter.MaxTestCount DO
@@ -77,20 +91,18 @@ FOR i := 0 TO TestSuite_Parameter.MaxTestCount DO
 END_FOR
 
 // Tests finished
-IF TotalTestCount = (TotalOkTestCount + TotalNokTestCount) THEN
-	IF NOT DoneEvent.bRaised THEN
-		DoneEvent.Create(eventClass		   := TC_EVENT_CLASSES.TestEvents,
-						 nEventId		   := 1,
-						 eSeverity		   := TcEventSeverity.Error,
-						 bWithConfirmation := FALSE,
-						 ipSourceInfo	   := 0);
+IF (TotalTestCount = (TotalOkTestCount + TotalNokTestCount)) AND NOT Complete THEN
+	DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
+					   nEventId		:= 1,
+					   eSeverity	:= TcEventSeverity.Error,
+					   ipSourceInfo := 0);
 
-		ResultString := CONCAT('Test Suite completed: ', CONCAT('Total Tests - ', TO_STRING(TotalTestCount)));
-		ResultString := CONCAT(ResultString, CONCAT(', OK Tests - ', TO_STRING(TotalOkTestCount)));
-		ResultString := CONCAT(ResultString, CONCAT(', Failed Tests - ', TO_STRING(TotalNokTestCount)));
-		DoneEvent.ipArguments.AddString(ResultString);
-		DoneEvent.Raise(0);
-	END_IF
+	ResultString := CONCAT('Test Suite completed: ', CONCAT('Total Tests - ', TO_STRING(TotalTestCount)));
+	ResultString := CONCAT(ResultString, CONCAT(', OK Tests - ', TO_STRING(TotalOkTestCount)));
+	ResultString := CONCAT(ResultString, CONCAT(', Failed Tests - ', TO_STRING(TotalNokTestCount)));
+	DoneMessage.ipArguments.AddString(ResultString);
+	DoneMessage.Send(0);
+	Complete := TRUE;
 END_IF]]></ST>
       </Implementation>
     </Method>
