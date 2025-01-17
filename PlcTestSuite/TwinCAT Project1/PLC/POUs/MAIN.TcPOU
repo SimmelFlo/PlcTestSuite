@@ -23,8 +23,8 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 1;
-	Actual	 := TestCounter.AddTwo(5, -5);
+	Expected := 0;
+	Actual	 := -5 + 5;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF]]></ST>
       </Implementation>
