@@ -18,12 +18,12 @@ VAR_INPUT
 END_VAR
 
 VAR
-	nCount : DINT;
+	nCount	   : DINT;
+	StringVar1 : T_MaxString;
+	StringVar2 : T_MaxString;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-IF Var1.typeclass <> Var2.typeclass THEN
+        <ST><![CDATA[IF Var1.typeclass <> Var2.typeclass THEN
 	State := E_TestStatus.DoneFailed;
 	ReportAssert();
 	RETURN;
@@ -35,14 +35,25 @@ IF Var1.diSize <> Var2.diSize THEN
 	RETURN;
 END_IF
 
-// Byte comparison
-FOR nCount := 0 TO Var2.diSize - 1 DO
-	IF Var1.pvalue[nCount] <> Var2.pvalue[nCount] THEN
+// String
+IF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYSTRING OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_STRING OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_WSTRING OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_XSTRING THEN
+	MEMCPY(destAddr := ADR(StringVar1), srcAddr := Var1.pValue, n := DINT_TO_UDINT(Var1.diSize));
+	MEMCPY(destAddr := ADR(StringVar2), srcAddr := Var2.pValue, n := DINT_TO_UDINT(Var2.diSize));
+	IF StringVar1 <> StringVar2 THEN
 		State := E_TestStatus.DoneFailed;
 		ReportAssert();
 		RETURN;
 	END_IF
-END_FOR
+ELSE
+	// Byte comparison
+	FOR nCount := 0 TO Var2.diSize - 1 DO
+		IF Var1.pvalue[nCount] <> Var2.pvalue[nCount] THEN
+			State := E_TestStatus.DoneFailed;
+			ReportAssert();
+			RETURN;
+		END_IF
+	END_FOR
+END_IF
 
 State := E_TestStatus.DoneOk;]]></ST>
       </Implementation>

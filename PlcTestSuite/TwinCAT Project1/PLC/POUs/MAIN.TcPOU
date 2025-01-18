@@ -3,32 +3,19 @@
   <POU Name="MAIN" Id="{7dbbc5fe-66aa-4f70-a8be-dd1553a601dc}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	TestCounter : FB_Counter;
-	ReRun		: BOOL;
+	TestTester : FB_TestTester;
+	ReRun	   : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[Test_Counter_AddTwo();
 Test_Counter_SubtractTwo();
-Test_Counter_AddMore();
+Test_Counter_BOOL();
+Test_String();
 IF ReRun THEN
 	TestSuite.ReRunTests();
 	ReRun := FALSE;
 END_IF]]></ST>
     </Implementation>
-    <Method Name="Test_Counter_AddMore" Id="{0a23e9d2-f7ab-4c19-9735-98437bc044ae}">
-      <Declaration><![CDATA[METHOD Test_Counter_AddMore
-VAR_INST
-	Expected : DINT;
-	Actual	 : DINT;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 0;
-	Actual	 := -5 + 5;
-	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
-END_IF]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="Test_Counter_AddTwo" Id="{3d2e2d40-a28e-4d42-ab9e-06275a7cf9a4}">
       <Declaration><![CDATA[METHOD Test_Counter_AddTwo
 VAR_INST
@@ -38,7 +25,21 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
 	Expected := 10;
-	Actual	 := TestCounter.AddTwo(5, 5);
+	Actual	 := TestTester.AddTwo(5, 5);
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Counter_BOOL" Id="{0a23e9d2-f7ab-4c19-9735-98437bc044ae}">
+      <Declaration><![CDATA[METHOD Test_Counter_BOOL
+VAR_INST
+	Expected : BOOL;
+	Actual	 : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	Expected := TRUE;
+	Actual	 := TestTester.TestBool;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF]]></ST>
       </Implementation>
@@ -52,7 +53,25 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
 	Expected := 0;
-	Actual	 := TestCounter.AddTwo(5, -5);
+	Actual	 := TestTester.AddTwo(5, -5);
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_String" Id="{8bbef3dd-ba77-496f-9525-8caeed7f5a8b}">
+      <Declaration><![CDATA[METHOD Test_String
+VAR_INST
+	Expected : STRING;
+	Actual	 : STRING;
+END_VAR
+VAR
+    SizeString : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	Expected := 'TestString ';
+	Actual	 := TestTester.TestString;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF]]></ST>
       </Implementation>

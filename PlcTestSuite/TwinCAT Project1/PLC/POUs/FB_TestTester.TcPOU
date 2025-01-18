@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_TestTester" Id="{012b8ed0-2a5c-4bc2-bd74-056604d88c1c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TestTester
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddTwo" Id="{2fd73b10-3d6d-4b49-8abc-ef2b87de2173}">
+      <Declaration><![CDATA[METHOD AddTwo : DINT
+VAR_INPUT
+    In1 : DINT;
+    In2 : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AddTwo := In1 + In2;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="TestBool" Id="{2988899c-ca12-45f9-859d-d570b073326e}">
+      <Declaration><![CDATA[PROPERTY TestBool : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f1d35567-8ed4-4dba-988e-94ce8ffb7c35}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestBool := TRUE;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{bcd3f901-a239-4e8e-a65b-26db934b60b2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TestString" Id="{22424641-a845-4ed3-85b7-950315ad3776}">
+      <Declaration><![CDATA[PROPERTY TestString : STRING]]></Declaration>
+      <Get Name="Get" Id="{1742c6f3-0ee6-4366-846b-5aca271d1aa5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestString := 'TestString';]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2e3852b0-e84e-40d7-93eb-d5d92c41872b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>
