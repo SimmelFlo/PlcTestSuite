@@ -38,6 +38,25 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Property Name="TestLReal" Id="{d3969fe2-4c8a-4c9e-b7f5-adf569135974}">
+      <Declaration><![CDATA[PROPERTY TestLReal : LREAL]]></Declaration>
+      <Get Name="Get" Id="{6dac0174-de78-4565-9f23-a2e9589d1681}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestLReal := 99889.45654;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{80a86056-3cd0-4c46-b68c-e9acf38aeddd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="TestString" Id="{22424641-a845-4ed3-85b7-950315ad3776}">
       <Declaration><![CDATA[PROPERTY TestString : STRING]]></Declaration>
       <Get Name="Get" Id="{1742c6f3-0ee6-4366-846b-5aca271d1aa5}">

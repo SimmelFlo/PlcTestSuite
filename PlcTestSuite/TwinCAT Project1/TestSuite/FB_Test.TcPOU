@@ -44,6 +44,12 @@ IF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYSTRING OR Var1.TypeClass = __SYS
 		ReportAssert();
 		RETURN;
 	END_IF
+ELSIF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
+	IF Var1.pValue^ <> Var2.pValue^ THEN
+		State := E_TestStatus.DoneFailed;
+		ReportAssert();
+		RETURN;
+	END_IF
 ELSE
 	// Byte comparison
 	FOR nCount := 0 TO Var2.diSize - 1 DO
