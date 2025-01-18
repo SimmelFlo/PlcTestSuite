@@ -1,4 +1,8 @@
-# How-To
+# PlcTestSuite Mission
+
+A user-friendly Unit Test Suite for PLC programmers, crafted for lowering the barriers to Test-Driven Development.
+
+## How-To
 
 Main
 ```
