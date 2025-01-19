@@ -45,7 +45,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[TestLReal := 99889.45654;]]></ST>
+          <ST><![CDATA[TestLReal := 75.75;]]></ST>
         </Implementation>
       </Get>
       <Set Name="Set" Id="{80a86056-3cd0-4c46-b68c-e9acf38aeddd}">

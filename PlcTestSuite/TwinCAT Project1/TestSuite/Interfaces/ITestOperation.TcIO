@@ -5,9 +5,9 @@
     <Method Name="AssertEqual" Id="{9c1c2102-a6cd-43d4-b955-8a4e23076c37}">
       <Declaration><![CDATA[METHOD AssertEqual
 VAR_INPUT
-	Var1					: ANY;
-	Var2					: ANY;
-	FloatingPointTollerance : LREAL := 0.000001;
+	Var1	: ANY;
+	Var2	: ANY;
+	Epsilon : LREAL := 0.000001;
 END_VAR]]></Declaration>
     </Method>
     <Method Name="ExecuteTest" Id="{b962dfa9-06a4-472e-bbe7-928854d9dd2a}">
