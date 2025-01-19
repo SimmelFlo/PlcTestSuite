@@ -12,13 +12,14 @@ Test_Counter_SubtractTwo();
 Test_BOOL();
 Test_String();
 Test_LREAL();
+Test_Real();
 IF ReRun THEN
 	TestSuite.ReRunTests();
 	ReRun := FALSE;
 END_IF]]></ST>
     </Implementation>
-    <Method Name="Test_BOOL" Id="{0a23e9d2-f7ab-4c19-9735-98437bc044ae}">
-      <Declaration><![CDATA[METHOD Test_BOOL
+    <Method Name="Test_Bool" Id="{0a23e9d2-f7ab-4c19-9735-98437bc044ae}">
+      <Declaration><![CDATA[METHOD Test_Bool
 VAR_INST
 	Expected : BOOL;
 	Actual	 : BOOL;
@@ -59,11 +60,25 @@ END_VAR]]></Declaration>
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Test_LREAL" Id="{266c5293-e490-4751-a35d-7ca22f784c01}">
-      <Declaration><![CDATA[METHOD Test_LREAL
+    <Method Name="Test_Lreal" Id="{266c5293-e490-4751-a35d-7ca22f784c01}">
+      <Declaration><![CDATA[METHOD Test_Lreal
 VAR_INST
 	Expected : LREAL;
 	Actual	 : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	Expected := 99889.45654;
+	Actual	 := TestTester.TestLReal;
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Real" Id="{bbcc2c62-b42d-486a-8ed5-5d1304721b84}">
+      <Declaration><![CDATA[METHOD Test_Real
+VAR_INST
+	Expected : REAL;
+	Actual	 : REAL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN

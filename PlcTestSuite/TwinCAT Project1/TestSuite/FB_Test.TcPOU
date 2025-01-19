@@ -13,14 +13,17 @@ END_VAR]]></Declaration>
     <Method Name="AssertEqual" Id="{848da2d4-fc83-435a-a497-3700fbb8f173}">
       <Declaration><![CDATA[METHOD AssertEqual
 VAR_INPUT
-	Var1 : ANY;
-	Var2 : ANY;
+	Var1					: ANY;
+	Var2					: ANY;
+	FloatingPointTollerance : LREAL := 0.000001;
 END_VAR
 
 VAR
 	nCount	   : DINT;
 	StringVar1 : T_MaxString;
 	StringVar2 : T_MaxString;
+	LrealVar1  : LREAL;
+	LrealVar2  : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Var1.typeclass <> Var2.typeclass THEN
@@ -45,7 +48,9 @@ IF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYSTRING OR Var1.TypeClass = __SYS
 		RETURN;
 	END_IF
 ELSIF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
-	IF Var1.pValue^ <> Var2.pValue^ THEN
+	MEMCPY(destAddr := ADR(LrealVar1), srcAddr := Var1.pValue, n := DINT_TO_UDINT(Var1.diSize));
+	MEMCPY(destAddr := ADR(LrealVar2), srcAddr := Var2.pValue, n := DINT_TO_UDINT(Var2.diSize));
+	IF LrealVar1 <> LrealVar2 THEN
 		State := E_TestStatus.DoneFailed;
 		ReportAssert();
 		RETURN;
