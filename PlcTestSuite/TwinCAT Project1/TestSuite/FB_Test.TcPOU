@@ -28,13 +28,13 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Var1.typeclass <> Var2.typeclass THEN
 	State := E_TestStatus.DoneFailed;
-	ReportAssert();
+	ReportAssert('Type missmatch!');
 	RETURN;
 END_IF
 
 IF Var1.diSize <> Var2.diSize THEN
 	State := E_TestStatus.DoneFailed;
-	ReportAssert();
+	ReportAssert('Type size missmatch!');
 	RETURN;
 END_IF
 
@@ -83,6 +83,10 @@ ExecuteTest := State = E_TestStatus.Running;]]></ST>
     </Method>
     <Method Name="ReportAssert" Id="{70613942-8c38-478a-ad8e-0d3b3e114371}">
       <Declaration><![CDATA[METHOD PRIVATE ReportAssert
+VAR_INPUT
+	Reason : STRING := '';
+END_VAR
+
 VAR
 	ResultString : T_MaxString;
 END_VAR]]></Declaration>
@@ -93,6 +97,8 @@ END_VAR]]></Declaration>
 				   ipSourceInfo := 0);
 
 ResultString := CONCAT('Test failed - ', TestId);
+ResultString := CONCAT(ResultString, '! Reason: ');
+ResultString := CONCAT(ResultString, Reason);
 TestMessage.ipArguments.AddString(ResultString);
 TestMessage.Send(0);]]></ST>
       </Implementation>
