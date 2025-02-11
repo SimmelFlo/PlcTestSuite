@@ -44,7 +44,7 @@ IF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYSTRING OR Var1.TypeClass = __SYS
 	MEMCPY(destAddr := ADR(StringVar2), srcAddr := Var2.pValue, n := DINT_TO_UDINT(Var2.diSize));
 	IF StringVar1 <> StringVar2 THEN
 		State := E_TestStatus.DoneFailed;
-		ReportAssert();
+		ReportAssert(CONCAT(CONCAT('Value 1: ', F_GetValueString(Var1, 0, TRUE)), CONCAT(' , Value 2: ', F_GetValueString(Var2, 0, TRUE))));
 		RETURN;
 	END_IF
 ELSIF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
@@ -52,7 +52,7 @@ ELSIF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Var1.TypeClass = __SY
 	MEMCPY(destAddr := ADR(LrealVar2), srcAddr := Var2.pValue, n := DINT_TO_UDINT(Var2.diSize));
 	IF ((LrealVar1 - Epsilon) > LrealVar2) OR ((LrealVar1 + Epsilon) < LrealVar2) THEN
 		State := E_TestStatus.DoneFailed;
-		ReportAssert();
+		ReportAssert(CONCAT(CONCAT('Value 1: ', F_GetValueString(Var1, 5, TRUE)), CONCAT(' , Value 2: ', F_GetValueString(Var2, 5, TRUE))));
 		RETURN;
 	END_IF
 ELSE
@@ -60,7 +60,7 @@ ELSE
 	FOR nCount := 0 TO Var2.diSize - 1 DO
 		IF Var1.pvalue[nCount] <> Var2.pvalue[nCount] THEN
 			State := E_TestStatus.DoneFailed;
-			ReportAssert();
+			ReportAssert(CONCAT(CONCAT('Value 1: ', F_GetValueString(Var1, 5, TRUE)), CONCAT(' , Value 2: ', F_GetValueString(Var2, 5, TRUE))));
 			RETURN;
 		END_IF
 	END_FOR
@@ -97,7 +97,7 @@ END_VAR]]></Declaration>
 				   ipSourceInfo := 0);
 
 ResultString := CONCAT('Test failed - ', TestId);
-ResultString := CONCAT(ResultString, '! Reason: ');
+ResultString := CONCAT(ResultString, '! ');
 ResultString := CONCAT(ResultString, Reason);
 TestMessage.ipArguments.AddString(ResultString);
 TestMessage.Send(0);]]></ST>

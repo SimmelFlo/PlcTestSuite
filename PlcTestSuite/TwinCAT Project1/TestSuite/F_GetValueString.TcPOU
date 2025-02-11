@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_GetValueString" Id="{6a6fc17b-b70d-485c-a5ef-79199390c007}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_GetValueString : STRING
+VAR_INPUT
+	Symbol		: ANY;
+	iPrecision	: INT;
+	bRound		: BOOL;
+END_VAR
+VAR
+	Val			: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF F_GetValue(Symbol, Val) THEN
+	IF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_BOOL THEN
+		F_GetValueString := TO_STRING(TO_BOOL(Val));
+	ELSE
+		F_GetValueString := LREAL_TO_FMTSTR(Val, iPrecision, bRound);
+	END_IF
+ELSE
+	F_GetValueString := '';
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
