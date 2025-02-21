@@ -1,26 +1,89 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="F_GetValueString" Id="{6a6fc17b-b70d-485c-a5ef-79199390c007}" SpecialFunc="None">
+  <POU Name="F_GetValueString" Id="{d92f83d0-a528-4290-b20f-eeb6abd04e6a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION F_GetValueString : STRING
 VAR_INPUT
-	Symbol		: ANY;
-	iPrecision	: INT;
-	bRound		: BOOL;
+	Symbol : ANY;
 END_VAR
+
 VAR
-	Val			: LREAL;
-END_VAR
-]]></Declaration>
+	ubuff  : ULINT;
+	sibuff : SINT;
+	ibuff  : INT;
+	dibuff : DINT;
+	libuff : LINT;
+	rbuff  : REAL;
+    lrbuff : LREAL;
+	sbuff  : STRING(255);
+	wsbuff : WSTRING(255);
+	x	   : INT; // loop var for STRING and WSTRING
+END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF F_GetValue(Symbol, Val) THEN
-	IF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_BOOL THEN
-		F_GetValueString := TO_STRING(TO_BOOL(Val));
-	ELSE
-		F_GetValueString := LREAL_TO_FMTSTR(Val, iPrecision, bRound);
-	END_IF
+      <ST><![CDATA[F_GetValueString := '';
+CASE Symbol.TypeClass OF
+	// Get Unsigned Values
+	__SYSTEM.TYPE_CLASS.TYPE_BOOL:
+		memcpy(ADR(ubuff), Symbol.pValue, Symbol.diSize);
+		F_GetValueString := TO_STRING(TO_BOOL(TO_LREAL(ubuff)));
+
+	__SYSTEM.TYPE_CLASS.TYPE_BYTE, __SYSTEM.TYPE_CLASS.TYPE_USINT, __SYSTEM.TYPE_CLASS.TYPE_WORD, __SYSTEM.TYPE_CLASS.TYPE_UINT, __SYSTEM.TYPE_CLASS.TYPE_DWORD, __SYSTEM.TYPE_CLASS.TYPE_UDINT, __SYSTEM.TYPE_CLASS.TYPE_LWORD, __SYSTEM.TYPE_CLASS.TYPE_ULINT:
+		memcpy(ADR(ubuff), Symbol.pValue, Symbol.diSize);
+		F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(ubuff), 0, FALSE);
+
+	// Get Signed Values
+	__SYSTEM.TYPE_CLASS.TYPE_SINT:
+		memcpy(ADR(sibuff), Symbol.pValue, Symbol.diSize);
+		F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(sibuff), 0, FALSE);
+
+	__SYSTEM.TYPE_CLASS.TYPE_INT:
+		memcpy(ADR(ibuff), Symbol.pValue, Symbol.diSize);
+		F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(ibuff), 0, FALSE);
+
+	__SYSTEM.TYPE_CLASS.TYPE_DINT:
+		memcpy(ADR(dibuff), Symbol.pValue, Symbol.diSize);
+		F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(dibuff), 0, FALSE);
+
+	__SYSTEM.TYPE_CLASS.TYPE_LINT:
+		memcpy(ADR(libuff), Symbol.pValue, Symbol.diSize);
+		F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(libuff), 0, FALSE);
+
+	// Get Float Values
+	__SYSTEM.TYPE_CLASS.TYPE_REAL, __SYSTEM.TYPE_CLASS.TYPE_LREAL:
+		IF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
+			memcpy(ADR(rbuff), Symbol.pValue, Symbol.diSize);
+			F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(rbuff), 5, TRUE);
+		ELSIF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL THEN
+			memcpy(ADR(lrbuff), Symbol.pValue, Symbol.diSize);
+			F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(lrbuff), 5, TRUE);
+		END_IF
+
+	// Get String Values
+	__SYSTEM.TYPE_CLASS.TYPE_STRING, __SYSTEM.TYPE_CLASS.TYPE_WSTRING:
+		IF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_STRING THEN
+			MEMCPY(ADR(sbuff), Symbol.pValue, MIN(SIZEOF(sbuff), TO_UDINT(Symbol.diSize)));
+		ELSIF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_WSTRING THEN
+			MEMCPY(ADR(wsbuff), Symbol.pValue, MIN(SIZEOF(wsbuff), TO_UDINT(Symbol.diSize)));
+			WSTRING_TO_STRING2(ADR(sbuff), ADR(wsbuff), SIZEOF(sbuff));
+		END_IF
+
+		// Check if STRING is a number, 45 = '-', 46 = '.', 48 - 57 = '0-9', 101 = 'e' (allowed for scientific notation)
+		FOR x := 0 TO LEN(sbuff) - 1 DO
+			// '-' must be at the beginning or after an e if one exists
+			IF ((x <> 0 AND sbuff[x] = 45) AND (x > 0 AND_THEN (sbuff[x] = 45 AND sbuff[x - 1] <> 101)))
+			   // 'e' cannot be the first character (for scientific notation)
+			   	OR (x = 0 AND sbuff[x] = 101)
+			   // if any other ASCII							
+			   	OR (sbuff[x] <> 101 AND sbuff[x] <> 45 AND sbuff[x] <> 46 AND (sbuff[x] < 48 OR sbuff[x] > 57)) THEN
+				;
+				RETURN;
+			END_IF
+		END_FOR
+
+		F_GetValueString := sbuff;
+
 ELSE
-	F_GetValueString := '';
-END_IF]]></ST>
+	;
+END_CASE]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

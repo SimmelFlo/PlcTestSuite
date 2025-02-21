@@ -75,9 +75,6 @@
     <Compile Include="FB_TestSuite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="F_GetValue.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="F_GetValueString.TcPOU">
       <SubType>Code</SubType>
     </Compile>
