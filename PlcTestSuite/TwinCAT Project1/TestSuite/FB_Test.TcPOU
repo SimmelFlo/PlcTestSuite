@@ -13,54 +13,54 @@ END_VAR]]></Declaration>
     <Method Name="AssertEqual" Id="{848da2d4-fc83-435a-a497-3700fbb8f173}">
       <Declaration><![CDATA[METHOD AssertEqual
 VAR_INPUT
-	Var1	: ANY;
-	Var2	: ANY;
-	Epsilon : LREAL := 0.000001;
+	Expected : ANY;
+	Actual	 : ANY;
+	Epsilon	 : LREAL := 0.000001;
 END_VAR
 
 VAR
 	nCount	   : DINT;
-	StringVar1 : T_MaxString;
-	StringVar2 : T_MaxString;
-	LrealVar1  : LREAL;
-	LrealVar2  : LREAL;
+	StringExpected : T_MaxString;
+	StringActual : T_MaxString;
+	LrealExpected  : LREAL;
+	LrealActual  : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF Var1.typeclass <> Var2.typeclass THEN
+        <ST><![CDATA[IF Expected.typeclass <> Actual.typeclass THEN
 	State := E_TestStatus.DoneFailed;
 	ReportAssert('Type missmatch!');
 	RETURN;
 END_IF
 
-IF Var1.diSize <> Var2.diSize THEN
+IF Expected.diSize <> Actual.diSize THEN
 	State := E_TestStatus.DoneFailed;
 	ReportAssert('Type size missmatch!');
 	RETURN;
 END_IF
 
 // String
-IF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYSTRING OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_STRING OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_WSTRING OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_XSTRING THEN
-	MEMCPY(destAddr := ADR(StringVar1), srcAddr := Var1.pValue, n := DINT_TO_UDINT(Var1.diSize));
-	MEMCPY(destAddr := ADR(StringVar2), srcAddr := Var2.pValue, n := DINT_TO_UDINT(Var2.diSize));
-	IF StringVar1 <> StringVar2 THEN
+IF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYSTRING OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_STRING OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_WSTRING OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_XSTRING THEN
+	MEMCPY(destAddr := ADR(StringExpected), srcAddr := Expected.pValue, n := DINT_TO_UDINT(Expected.diSize));
+	MEMCPY(destAddr := ADR(StringActual), srcAddr := Actual.pValue, n := DINT_TO_UDINT(Actual.diSize));
+	IF StringExpected <> StringActual THEN
 		State := E_TestStatus.DoneFailed;
-		ReportAssert(CONCAT(CONCAT('Value 1: ', F_GetValueString(Var1)), CONCAT(' , Value 2: ', F_GetValueString(Var2))));
+		ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
 		RETURN;
 	END_IF
-ELSIF Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL OR Var1.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
-	MEMCPY(destAddr := ADR(LrealVar1), srcAddr := Var1.pValue, n := DINT_TO_UDINT(Var1.diSize));
-	MEMCPY(destAddr := ADR(LrealVar2), srcAddr := Var2.pValue, n := DINT_TO_UDINT(Var2.diSize));
-	IF ((LrealVar1 - Epsilon) > LrealVar2) OR ((LrealVar1 + Epsilon) < LrealVar2) THEN
+ELSIF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
+	MEMCPY(destAddr := ADR(LrealExpected), srcAddr := Expected.pValue, n := DINT_TO_UDINT(Expected.diSize));
+	MEMCPY(destAddr := ADR(LrealActual), srcAddr := Actual.pValue, n := DINT_TO_UDINT(Actual.diSize));
+	IF ((LrealExpected - Epsilon) > LrealActual) OR ((LrealExpected + Epsilon) < LrealActual) THEN
 		State := E_TestStatus.DoneFailed;
-		ReportAssert(CONCAT(CONCAT('Value 1: ', F_GetValueString(Var1)), CONCAT(' , Value 2: ', F_GetValueString(Var2))));
+		ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
 		RETURN;
 	END_IF
 ELSE
 	// Byte comparison
-	FOR nCount := 0 TO Var2.diSize - 1 DO
-		IF Var1.pvalue[nCount] <> Var2.pvalue[nCount] THEN
+	FOR nCount := 0 TO Actual.diSize - 1 DO
+		IF Expected.pvalue[nCount] <> Actual.pvalue[nCount] THEN
 			State := E_TestStatus.DoneFailed;
-			ReportAssert(CONCAT(CONCAT('Value 1: ', F_GetValueString(Var1)), CONCAT(' , Value 2: ', F_GetValueString(Var2))));
+			ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
 			RETURN;
 		END_IF
 	END_FOR
