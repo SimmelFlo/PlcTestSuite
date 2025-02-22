@@ -32,3 +32,10 @@ IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF
 ```
+
+## Parameter
+
+The amount of tests can be changed in library parameter settings. Default is 10.
+
+![image](https://github.com/user-attachments/assets/8fe82687-2cdc-4290-9789-8bbcd90b384d)
+
