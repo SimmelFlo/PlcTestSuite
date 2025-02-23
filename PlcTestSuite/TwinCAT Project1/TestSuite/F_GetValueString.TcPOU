@@ -21,7 +21,6 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[F_GetValueString := '';
 CASE Symbol.TypeClass OF
-	// Get Unsigned Values
 	__SYSTEM.TYPE_CLASS.TYPE_BOOL:
 		memcpy(ADR(ubuff), Symbol.pValue, Symbol.diSize);
 		F_GetValueString := TO_STRING(TO_BOOL(TO_LREAL(ubuff)));
@@ -30,7 +29,6 @@ CASE Symbol.TypeClass OF
 		memcpy(ADR(ubuff), Symbol.pValue, Symbol.diSize);
 		F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(ubuff), 0, FALSE);
 
-	// Get Signed Values
 	__SYSTEM.TYPE_CLASS.TYPE_SINT:
 		memcpy(ADR(sibuff), Symbol.pValue, Symbol.diSize);
 		F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(sibuff), 0, FALSE);
@@ -47,7 +45,6 @@ CASE Symbol.TypeClass OF
 		memcpy(ADR(libuff), Symbol.pValue, Symbol.diSize);
 		F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(libuff), 0, FALSE);
 
-	// Get Float Values
 	__SYSTEM.TYPE_CLASS.TYPE_REAL, __SYSTEM.TYPE_CLASS.TYPE_LREAL:
 		IF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
 			memcpy(ADR(rbuff), Symbol.pValue, Symbol.diSize);
@@ -57,7 +54,6 @@ CASE Symbol.TypeClass OF
 			F_GetValueString := LREAL_TO_FMTSTR(TO_LREAL(lrbuff), 5, TRUE);
 		END_IF
 
-	// Get String Values
 	__SYSTEM.TYPE_CLASS.TYPE_STRING, __SYSTEM.TYPE_CLASS.TYPE_WSTRING:
 		IF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_STRING THEN
 			MEMCPY(ADR(sbuff), Symbol.pValue, MIN(SIZEOF(sbuff), TO_UDINT(Symbol.diSize)));
@@ -66,23 +62,7 @@ CASE Symbol.TypeClass OF
 			WSTRING_TO_STRING2(ADR(sbuff), ADR(wsbuff), SIZEOF(sbuff));
 		END_IF
 
-		// Check if STRING is a number, 45 = '-', 46 = '.', 48 - 57 = '0-9', 101 = 'e' (allowed for scientific notation)
-		FOR x := 0 TO LEN(sbuff) - 1 DO
-			// '-' must be at the beginning or after an e if one exists
-			IF ((x <> 0 AND sbuff[x] = 45) AND (x > 0 AND_THEN (sbuff[x] = 45 AND sbuff[x - 1] <> 101)))
-			   // 'e' cannot be the first character (for scientific notation)
-			   	OR (x = 0 AND sbuff[x] = 101)
-			   // if any other ASCII							
-			   	OR (sbuff[x] <> 101 AND sbuff[x] <> 45 AND sbuff[x] <> 46 AND (sbuff[x] < 48 OR sbuff[x] > 57)) THEN
-				;
-				RETURN;
-			END_IF
-		END_FOR
-
 		F_GetValueString := sbuff;
-
-ELSE
-	;
 END_CASE]]></ST>
     </Implementation>
   </POU>

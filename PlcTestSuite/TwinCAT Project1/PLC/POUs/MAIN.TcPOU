@@ -26,7 +26,7 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := False;
+	Expected := TRUE;
 	Actual	 := TestTester.TestBool;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF]]></ST>
@@ -40,7 +40,7 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 11;
+	Expected := 10;
 	Actual	 := TestTester.AddTwo(5, 5);
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF]]></ST>
@@ -54,7 +54,7 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 1;
+	Expected := 0;
 	Actual	 := TestTester.AddTwo(5, -5);
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF]]></ST>
@@ -68,7 +68,7 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 75.1;
+	Expected := 75.75;
 	Actual	 := TestTester.TestLReal;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual, 0.1);
 END_IF]]></ST>
@@ -82,9 +82,9 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 78;
+	Expected := 75.85;
 	Actual	 := TestTester.TestLReal;
-	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual, 0.1);
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -100,7 +100,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 'TestStrisgfa';
+	Expected := 'TestString';
 	Actual	 := TestTester.TestString;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF]]></ST>

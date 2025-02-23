@@ -19,11 +19,13 @@ VAR_INPUT
 END_VAR
 
 VAR
-	nCount	   : DINT;
+	nCount		   : DINT;
 	StringExpected : T_MaxString;
-	StringActual : T_MaxString;
+	StringActual   : T_MaxString;
 	LrealExpected  : LREAL;
-	LrealActual  : LREAL;
+	LrealActual	   : LREAL;
+	RealExpected   : REAL;
+	RealActual	   : REAL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected.typeclass <> Actual.typeclass THEN
@@ -47,10 +49,18 @@ IF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYSTRING OR Expected.TypeClass
 		ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
 		RETURN;
 	END_IF
-ELSIF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
+ELSIF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL THEN
 	MEMCPY(destAddr := ADR(LrealExpected), srcAddr := Expected.pValue, n := DINT_TO_UDINT(Expected.diSize));
 	MEMCPY(destAddr := ADR(LrealActual), srcAddr := Actual.pValue, n := DINT_TO_UDINT(Actual.diSize));
 	IF ((LrealExpected - Epsilon) > LrealActual) OR ((LrealExpected + Epsilon) < LrealActual) THEN
+		State := E_TestStatus.DoneFailed;
+		ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
+		RETURN;
+	END_IF
+ELSIF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
+	MEMCPY(destAddr := ADR(RealExpected), srcAddr := Expected.pValue, n := DINT_TO_UDINT(Expected.diSize));
+	MEMCPY(destAddr := ADR(RealActual), srcAddr := Actual.pValue, n := DINT_TO_UDINT(Actual.diSize));
+	IF ((RealExpected - Epsilon) > RealActual) OR ((RealExpected + Epsilon) < RealActual) THEN
 		State := E_TestStatus.DoneFailed;
 		ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
 		RETURN;
