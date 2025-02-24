@@ -68,7 +68,7 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 75.85;
+	Expected := 75.75;
 	Actual	 := TestTester.TestLReal;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual, 0.1);
 END_IF]]></ST>
@@ -82,9 +82,9 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 75.75;
+	Expected := 75.85;
 	Actual	 := TestTester.TestLReal;
-	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual, 0.1);
 END_IF]]></ST>
       </Implementation>
     </Method>
