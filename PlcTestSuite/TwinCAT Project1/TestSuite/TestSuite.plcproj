@@ -17,14 +17,14 @@
     <Implicit_KindOfTask>{c4ee90fc-1033-4ba8-9769-29ed2a6ee59a}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{99d89e70-c8da-4f56-8fe4-4d0d93738b71}</Implicit_Jitter_Distribution>
     <LibraryReferences>{0d499373-b39e-4745-87ca-dc69829d1c1d}</LibraryReferences>
-    <Released>false</Released>
+    <Released>true</Released>
     <AllowChecksForLibrary>false</AllowChecksForLibrary>
     <POUsForPropertyAccessIncluded>true</POUsForPropertyAccessIncluded>
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
     <VirtualLibrary>true</VirtualLibrary>
     <Company>Simmel</Company>
     <Title>Tc3PlcTestSuite</Title>
-    <ProjectVersion>1.0.2</ProjectVersion>
+    <ProjectVersion>1.0.3</ProjectVersion>
     <DefaultNamespace>Tc3PlcTestSuite</DefaultNamespace>
     <Author>Simmel Florian</Author>
     <CompilerDefines>VISU_USEPROPERTYINFO</CompilerDefines>
@@ -127,8 +127,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -215,14 +215,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
