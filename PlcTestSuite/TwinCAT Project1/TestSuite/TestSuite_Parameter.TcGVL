@@ -3,7 +3,7 @@
   <GVL Name="TestSuite_Parameter" Id="{71977508-7c74-4ec9-b7a4-3255aee38094}" ParameterList="True">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
-	MaxTestCount : DINT := 10;
+	MaxTestCount : DINT := 4;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

@@ -7,7 +7,7 @@ VAR_GENERIC CONSTANT
 END_VAR
 IMPLEMENTS ITestSuite
 VAR
-	TestCollection	  : ARRAY[0..TestSuite_Parameter.MaxTestCount] OF FB_Test;
+	TestCollection	  : ARRAY[0.._MaxTestCount] OF FB_Test;
 	NoAction		  : FB_Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
 	ActiveTest		  : DINT;
 	DoneMessage		  : FB_TcMessage;
@@ -75,6 +75,15 @@ END_VAR]]></Declaration>
 		// Out of tests
 		IF i = _MaxTestCount THEN
 			Test := NoAction;
+			DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
+							   nEventId		:= 1,
+							   eSeverity	:= TcEventSeverity.Error,
+							   ipSourceInfo := 0);
+
+			ResultString := CONCAT('Test not added, max Tests exeeded - ', TO_STRING(_MaxTestCount));
+			DoneMessage.ipArguments.AddString(ResultString);
+			DoneMessage.Send(0);
+			Complete := TRUE;
 		END_IF
 	END_FOR
 

@@ -49,6 +49,12 @@
     <PlaceholderReference Include="[Tc3PlcTestSuite]">
       <DefaultResolution>[Tc3PlcTestSuite], * (Simmel)</DefaultResolution>
       <Namespace>Tc3PlcTestSuite</Namespace>
+      <Parameters>
+        <Parameter ListName="TESTSUITE_PARAMETER" xmlns="">
+          <Key>MAXTESTCOUNT</Key>
+          <Value>5</Value>
+        </Parameter>
+      </Parameters>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
