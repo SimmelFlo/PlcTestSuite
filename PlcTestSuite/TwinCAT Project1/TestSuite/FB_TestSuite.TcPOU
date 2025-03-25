@@ -1,9 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_TestSuite" Id="{d93a9aa9-034f-4b1b-8d51-f63a960f5d15}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_TestSuite IMPLEMENTS ITestSuite
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TestSuite 
+VAR_GENERIC CONSTANT
+    _MaxTestCount : DINT := 10;
+END_VAR
+IMPLEMENTS ITestSuite
 VAR
-	TestCollection	  : ARRAY[0..TestSuite_Parameter.MaxTestCount] OF FB_Test;
+	TestCollection	  : ARRAY[0.._MaxTestCount] OF FB_Test;
 	NoAction		  : FB_Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
 	ActiveTest		  : DINT;
 	DoneMessage		  : FB_TcMessage;
@@ -40,7 +44,7 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Complete THEN
-	FOR i := 0 TO TestSuite_Parameter.MaxTestCount DO
+	FOR i := 0 TO _MaxTestCount DO
 		// Detect first running test
 		IF TestCollection[i].State = E_TestStatus.Running THEN
 			ActiveTest := i;
@@ -69,8 +73,17 @@ END_VAR]]></Declaration>
 		END_IF
 
 		// Out of tests
-		IF i = TestSuite_Parameter.MaxTestCount THEN
+		IF i = _MaxTestCount THEN
 			Test := NoAction;
+			DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
+							   nEventId		:= 1,
+							   eSeverity	:= TcEventSeverity.Error,
+							   ipSourceInfo := 0);
+
+			ResultString := CONCAT('Test not added, max Tests exeeded - ', TO_STRING(_MaxTestCount));
+			DoneMessage.ipArguments.AddString(ResultString);
+			DoneMessage.Send(0);
+			Complete := TRUE;
 		END_IF
 	END_FOR
 
@@ -78,7 +91,7 @@ END_VAR]]></Declaration>
 	TotalTestCount	  := 0;
 	TotalOkTestCount  := 0;
 	TotalNokTestCount := 0;
-	FOR i := 0 TO TestSuite_Parameter.MaxTestCount DO
+	FOR i := 0 TO _MaxTestCount DO
 		IF TestCollection[i].TestId <> '' THEN
 			TotalTestCount := TotalTestCount + 1;
 			IF TestCollection[i].State = E_TestStatus.DoneOk THEN
