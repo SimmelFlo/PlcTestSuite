@@ -46,8 +46,8 @@
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
-    <PlaceholderReference Include="[Tc3_PlcTestSuite]">
-      <DefaultResolution>[Tc3_PlcTestSuite], * (Simmel)</DefaultResolution>
+    <PlaceholderReference Include="Tc3_PlcTestSuite">
+      <DefaultResolution>Tc3_PlcTestSuite, * (Simmel)</DefaultResolution>
       <Namespace>Tc3_PlcTestSuite</Namespace>
     </PlaceholderReference>
   </ItemGroup>
