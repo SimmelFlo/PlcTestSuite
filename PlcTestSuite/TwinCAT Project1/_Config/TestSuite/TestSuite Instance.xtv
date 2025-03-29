@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.14" ClassName="CTComPlcObjDef">
-	<Instance TmcHash="{DE3E49F3-9FFE-86C9-B419-33C4BCEC1460}"/>
+	<Instance TmcHash="{7201D24F-1C06-2458-3ACC-32296A641D62}"/>
 </TcSmItem>

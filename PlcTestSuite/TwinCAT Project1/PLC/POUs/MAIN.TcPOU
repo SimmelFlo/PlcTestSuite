@@ -3,7 +3,7 @@
   <POU Name="MAIN" Id="{7dbbc5fe-66aa-4f70-a8be-dd1553a601dc}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	TestTester : FB_TestTester;
+	TestTester : TestTester;
 	ReRun	   : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
