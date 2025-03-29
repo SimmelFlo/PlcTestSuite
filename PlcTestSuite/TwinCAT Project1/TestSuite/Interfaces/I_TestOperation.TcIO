@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <Itf Name="ITestOperation" Id="{08860d6e-c469-4ecd-9c53-2cb76abc1038}">
-    <Declaration><![CDATA[INTERFACE ITestOperation EXTENDS __SYSTEM.IQueryInterface]]></Declaration>
+  <Itf Name="I_TestOperation" Id="{08860d6e-c469-4ecd-9c53-2cb76abc1038}">
+    <Declaration><![CDATA[INTERFACE I_TestOperation EXTENDS __SYSTEM.IQueryInterface]]></Declaration>
     <Method Name="AssertEqual" Id="{9c1c2102-a6cd-43d4-b955-8a4e23076c37}">
       <Declaration><![CDATA[METHOD AssertEqual
 VAR_INPUT

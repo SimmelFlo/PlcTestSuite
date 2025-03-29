@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_TestTester" Id="{012b8ed0-2a5c-4bc2-bd74-056604d88c1c}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_TestTester
+  <POU Name="TestTester" Id="{012b8ed0-2a5c-4bc2-bd74-056604d88c1c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK TestTester
 VAR
 END_VAR
 ]]></Declaration>

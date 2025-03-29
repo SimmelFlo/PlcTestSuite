@@ -10,7 +10,7 @@ VAR_INPUT
 	
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[F_GetTitle := "Tc3PlcTestSuite";
+      <ST><![CDATA[F_GetTitle := "Tc3_PlcTestSuite";
 ]]></ST>
     </Implementation>
   </POU>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_Test" Id="{9e8aece1-ee26-4cf6-b4f4-25a27cfed9dc}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Test IMPLEMENTS ITestOperation
+  <POU Name="Test" Id="{9e8aece1-ee26-4cf6-b4f4-25a27cfed9dc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test IMPLEMENTS I_TestOperation
 VAR
 	_TestId		: T_MaxString;
 	_State		: E_TestStatus;
@@ -46,7 +46,7 @@ IF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYSTRING OR Expected.TypeClass
 	MEMCPY(destAddr := ADR(StringActual), srcAddr := Actual.pValue, n := DINT_TO_UDINT(Actual.diSize));
 	IF StringExpected <> StringActual THEN
 		State := E_TestStatus.DoneFailed;
-		ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
+		ReportAssert(CONCAT(CONCAT('Expected: ', GetValueString(Expected)), CONCAT(' , Actual: ', GetValueString(Actual))));
 		RETURN;
 	END_IF
 ELSIF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL THEN
@@ -54,7 +54,7 @@ ELSIF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL THEN
 	MEMCPY(destAddr := ADR(LrealActual), srcAddr := Actual.pValue, n := DINT_TO_UDINT(Actual.diSize));
 	IF ((LrealExpected - Epsilon) > LrealActual) OR ((LrealExpected + Epsilon) < LrealActual) THEN
 		State := E_TestStatus.DoneFailed;
-		ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
+		ReportAssert(CONCAT(CONCAT('Expected: ', GetValueString(Expected)), CONCAT(' , Actual: ', GetValueString(Actual))));
 		RETURN;
 	END_IF
 ELSIF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
@@ -62,7 +62,7 @@ ELSIF Expected.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_ANYREAL OR Expected.TypeClas
 	MEMCPY(destAddr := ADR(RealActual), srcAddr := Actual.pValue, n := DINT_TO_UDINT(Actual.diSize));
 	IF ((RealExpected - Epsilon) > RealActual) OR ((RealExpected + Epsilon) < RealActual) THEN
 		State := E_TestStatus.DoneFailed;
-		ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
+		ReportAssert(CONCAT(CONCAT('Expected: ', GetValueString(Expected)), CONCAT(' , Actual: ', GetValueString(Actual))));
 		RETURN;
 	END_IF
 ELSE
@@ -70,7 +70,7 @@ ELSE
 	FOR nCount := 0 TO Actual.diSize - 1 DO
 		IF Expected.pvalue[nCount] <> Actual.pvalue[nCount] THEN
 			State := E_TestStatus.DoneFailed;
-			ReportAssert(CONCAT(CONCAT('Expected: ', F_GetValueString(Expected)), CONCAT(' , Actual: ', F_GetValueString(Actual))));
+			ReportAssert(CONCAT(CONCAT('Expected: ', GetValueString(Expected)), CONCAT(' , Actual: ', GetValueString(Actual))));
 			RETURN;
 		END_IF
 	END_FOR
