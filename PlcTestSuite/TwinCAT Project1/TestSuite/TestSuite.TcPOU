@@ -11,6 +11,7 @@ VAR
 	NoAction		  : Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
 	ActiveTest		  : DINT;
 	DoneMessage		  : FB_TcMessage;
+    Source            : FB_TcSourceInfo;
 	TotalTestCount	  : UDINT := 0;
 	TotalOkTestCount  : UDINT := 0;
 	TotalNokTestCount : UDINT := 0;
@@ -75,14 +76,16 @@ END_VAR]]></Declaration>
 		// Out of tests
 		IF i = _MaxTestCount THEN
 			Test := NoAction;
+            Source.sName := 'Test Suite ';
 			DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 							   nEventId		:= 1,
 							   eSeverity	:= TcEventSeverity.Error,
-							   ipSourceInfo := 0);
+							   ipSourceInfo := Source);
 
 			ResultString := CONCAT('Test not added, max Tests exeeded - ', TO_STRING(_MaxTestCount));
 			DoneMessage.ipArguments.AddString(ResultString);
 			DoneMessage.Send(0);
+            Source.Clear();
 			Complete := TRUE;
 		END_IF
 	END_FOR
@@ -106,16 +109,18 @@ END_VAR]]></Declaration>
 
 	// Tests finished
 	IF (TotalTestCount = (TotalOkTestCount + TotalNokTestCount)) AND NOT Complete THEN
+        Source.sName := 'Test Suite ';
 		DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 						   nEventId		:= 1,
 						   eSeverity	:= TcEventSeverity.Error,
-						   ipSourceInfo := 0);
+						   ipSourceInfo := Source);
 
-		ResultString := CONCAT('Test Suite completed: ', CONCAT('Total Tests - ', TO_STRING(TotalTestCount)));
+		ResultString := CONCAT('Completed - ', CONCAT('Total Tests - ', TO_STRING(TotalTestCount)));
 		ResultString := CONCAT(ResultString, CONCAT(', OK Tests - ', TO_STRING(TotalOkTestCount)));
 		ResultString := CONCAT(ResultString, CONCAT(', Failed Tests - ', TO_STRING(TotalNokTestCount)));
 		DoneMessage.ipArguments.AddString(ResultString);
 		DoneMessage.Send(0);
+        Source.Clear();
 		Complete := TRUE;
 	END_IF
 ELSE

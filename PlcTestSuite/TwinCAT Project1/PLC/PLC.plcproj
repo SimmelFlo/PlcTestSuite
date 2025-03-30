@@ -17,6 +17,10 @@
     <Implicit_KindOfTask>{a788250f-dad1-4cb4-b3fa-e677d4946956}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{407b17fc-d8ad-4b8c-ad8e-2647033aa8b9}</Implicit_Jitter_Distribution>
     <LibraryReferences>{175bdc52-39d2-49ce-851d-8c020bfe680a}</LibraryReferences>
+    <Released>false</Released>
+    <AllowChecksForLibrary>false</AllowChecksForLibrary>
+    <POUsForPropertyAccessIncluded>false</POUsForPropertyAccessIncluded>
+    <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PlcTask.TcTTO">
@@ -46,15 +50,9 @@
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_PlcTestSuite">
-      <DefaultResolution>Tc3_PlcTestSuite, * (Simmel)</DefaultResolution>
+    <PlaceholderReference Include="[Tc3_PlcTestSuite]">
+      <DefaultResolution>[Tc3_PlcTestSuite], * (Simmel)</DefaultResolution>
       <Namespace>Tc3_PlcTestSuite</Namespace>
-      <Parameters>
-        <Parameter ListName="TESTSUITEPARAMETER" xmlns="">
-          <Key>MAXTESTCOUNT</Key>
-          <Value>50</Value>
-        </Parameter>
-      </Parameters>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>

@@ -22,35 +22,35 @@ END_VAR]]></Declaration>
       <ST><![CDATA[GetValueString := '';
 CASE Symbol.TypeClass OF
 	__SYSTEM.TYPE_CLASS.TYPE_BOOL:
-		memcpy(ADR(ubuff), Symbol.pValue, Symbol.diSize);
+		memcpy(ADR(ubuff), Symbol.pValue, TO_UDINT(Symbol.diSize));
 		GetValueString := TO_STRING(TO_BOOL(TO_LREAL(ubuff)));
 
 	__SYSTEM.TYPE_CLASS.TYPE_BYTE, __SYSTEM.TYPE_CLASS.TYPE_USINT, __SYSTEM.TYPE_CLASS.TYPE_WORD, __SYSTEM.TYPE_CLASS.TYPE_UINT, __SYSTEM.TYPE_CLASS.TYPE_DWORD, __SYSTEM.TYPE_CLASS.TYPE_UDINT, __SYSTEM.TYPE_CLASS.TYPE_LWORD, __SYSTEM.TYPE_CLASS.TYPE_ULINT:
-		memcpy(ADR(ubuff), Symbol.pValue, Symbol.diSize);
+		memcpy(ADR(ubuff), Symbol.pValue, TO_UDINT(Symbol.diSize));
 		GetValueString := LREAL_TO_FMTSTR(TO_LREAL(ubuff), 0, FALSE);
 
 	__SYSTEM.TYPE_CLASS.TYPE_SINT:
-		memcpy(ADR(sibuff), Symbol.pValue, Symbol.diSize);
+		memcpy(ADR(sibuff), Symbol.pValue, TO_UDINT(Symbol.diSize));
 		GetValueString := LREAL_TO_FMTSTR(TO_LREAL(sibuff), 0, FALSE);
 
 	__SYSTEM.TYPE_CLASS.TYPE_INT:
-		memcpy(ADR(ibuff), Symbol.pValue, Symbol.diSize);
+		memcpy(ADR(ibuff), Symbol.pValue, TO_UDINT(Symbol.diSize));
 		GetValueString := LREAL_TO_FMTSTR(TO_LREAL(ibuff), 0, FALSE);
 
 	__SYSTEM.TYPE_CLASS.TYPE_DINT:
-		memcpy(ADR(dibuff), Symbol.pValue, Symbol.diSize);
+		memcpy(ADR(dibuff), Symbol.pValue, TO_UDINT(Symbol.diSize));
 		GetValueString := LREAL_TO_FMTSTR(TO_LREAL(dibuff), 0, FALSE);
 
 	__SYSTEM.TYPE_CLASS.TYPE_LINT:
-		memcpy(ADR(libuff), Symbol.pValue, Symbol.diSize);
+		memcpy(ADR(libuff), Symbol.pValue, TO_UDINT(Symbol.diSize));
 		GetValueString := LREAL_TO_FMTSTR(TO_LREAL(libuff), 0, FALSE);
 
 	__SYSTEM.TYPE_CLASS.TYPE_REAL, __SYSTEM.TYPE_CLASS.TYPE_LREAL:
 		IF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_REAL THEN
-			memcpy(ADR(rbuff), Symbol.pValue, Symbol.diSize);
+			memcpy(ADR(rbuff), Symbol.pValue, TO_UDINT(Symbol.diSize));
 			GetValueString := LREAL_TO_FMTSTR(TO_LREAL(rbuff), 5, TRUE);
 		ELSIF Symbol.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_LREAL THEN
-			memcpy(ADR(lrbuff), Symbol.pValue, Symbol.diSize);
+			memcpy(ADR(lrbuff), Symbol.pValue, TO_UDINT(Symbol.diSize));
 			GetValueString := LREAL_TO_FMTSTR(TO_LREAL(lrbuff), 5, TRUE);
 		END_IF
 

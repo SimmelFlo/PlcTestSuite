@@ -6,6 +6,7 @@ VAR
 	_TestId		: T_MaxString;
 	_State		: E_TestStatus;
 	TestMessage : FB_TcMessage;
+    Source      : FB_TcSourceInfo;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -101,7 +102,8 @@ VAR
 	ResultString : T_MaxString;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TestMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
+        <ST><![CDATA[Source.sName := 'Test Suite ';
+TestMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 				   nEventId		:= 1,
 				   eSeverity	:= TcEventSeverity.Error,
 				   ipSourceInfo := 0);
@@ -110,7 +112,8 @@ ResultString := CONCAT('Test failed - ', TestId);
 ResultString := CONCAT(ResultString, '! ');
 ResultString := CONCAT(ResultString, Reason);
 TestMessage.ipArguments.AddString(ResultString);
-TestMessage.Send(0);]]></ST>
+TestMessage.Send(0);
+Source.Clear();]]></ST>
       </Implementation>
     </Method>
     <Property Name="State" Id="{107dda4b-11bf-4131-8c5f-64011be55284}">
