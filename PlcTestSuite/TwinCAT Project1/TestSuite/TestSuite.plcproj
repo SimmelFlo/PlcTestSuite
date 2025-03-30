@@ -23,9 +23,9 @@
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
     <VirtualLibrary>true</VirtualLibrary>
     <Company>Simmel</Company>
-    <Title>Tc3PlcTestSuite</Title>
-    <ProjectVersion>1.0.4</ProjectVersion>
-    <DefaultNamespace>Tc3PlcTestSuite</DefaultNamespace>
+    <Title>Tc3_PlcTestSuite</Title>
+    <ProjectVersion>1.0.6</ProjectVersion>
+    <DefaultNamespace>Tc3_PlcTestSuite</DefaultNamespace>
     <Author>Simmel Florian</Author>
     <CompilerDefines>VISU_USEPROPERTYINFO</CompilerDefines>
     <LibraryCategories>
@@ -69,19 +69,19 @@
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FB_Test.TcPOU">
+    <Compile Include="Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FB_TestSuite.TcPOU">
+    <Compile Include="TestSuite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="F_GetValueString.TcPOU">
+    <Compile Include="GetValueString.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Interfaces\ITestSuite.TcIO">
+    <Compile Include="Interfaces\I_TestSuite.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Interfaces\ITestOperation.TcIO">
+    <Compile Include="Interfaces\I_TestOperation.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Project Information\F_GetCompany.TcPOU">
@@ -102,11 +102,11 @@
     <Compile Include="Structures\ST_TestDefinition.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TestSuite.TcGVL">
+    <Compile Include="GlobalTestSuite.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="TestSuite_Parameter.TcGVL">
+    <Compile Include="TestSuiteParameter.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>

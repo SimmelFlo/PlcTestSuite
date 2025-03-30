@@ -17,12 +17,16 @@
     <Implicit_KindOfTask>{a788250f-dad1-4cb4-b3fa-e677d4946956}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{407b17fc-d8ad-4b8c-ad8e-2647033aa8b9}</Implicit_Jitter_Distribution>
     <LibraryReferences>{175bdc52-39d2-49ce-851d-8c020bfe680a}</LibraryReferences>
+    <Released>false</Released>
+    <AllowChecksForLibrary>false</AllowChecksForLibrary>
+    <POUsForPropertyAccessIncluded>false</POUsForPropertyAccessIncluded>
+    <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_TestTester.TcPOU">
+    <Compile Include="POUs\TestTester.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
@@ -46,15 +50,9 @@
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
-    <PlaceholderReference Include="[Tc3PlcTestSuite]">
-      <DefaultResolution>[Tc3PlcTestSuite], * (Simmel)</DefaultResolution>
-      <Namespace>Tc3PlcTestSuite</Namespace>
-      <Parameters>
-        <Parameter ListName="TESTSUITE_PARAMETER" xmlns="">
-          <Key>MAXTESTCOUNT</Key>
-          <Value>5</Value>
-        </Parameter>
-      </Parameters>
+    <PlaceholderReference Include="[Tc3_PlcTestSuite]">
+      <DefaultResolution>[Tc3_PlcTestSuite], * (Simmel)</DefaultResolution>
+      <Namespace>Tc3_PlcTestSuite</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
@@ -65,8 +63,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -153,14 +151,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
