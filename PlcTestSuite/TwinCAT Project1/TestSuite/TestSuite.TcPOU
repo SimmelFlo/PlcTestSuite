@@ -76,7 +76,7 @@ END_VAR]]></Declaration>
 		// Out of tests
 		IF i = _MaxTestCount THEN
 			Test := NoAction;
-            Source.sName := 'Test Suite ';
+            Source.sName := 'Test Suite';
 			DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 							   nEventId		:= 1,
 							   eSeverity	:= TcEventSeverity.Error,
@@ -109,7 +109,7 @@ END_VAR]]></Declaration>
 
 	// Tests finished
 	IF (TotalTestCount = (TotalOkTestCount + TotalNokTestCount)) AND NOT Complete THEN
-        Source.sName := 'Test Suite ';
+        Source.sName := 'Test Suite';
 		DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 						   nEventId		:= 1,
 						   eSeverity	:= TcEventSeverity.Error,

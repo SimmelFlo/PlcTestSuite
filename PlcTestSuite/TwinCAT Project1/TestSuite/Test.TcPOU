@@ -102,7 +102,7 @@ VAR
 	ResultString : T_MaxString;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Source.sName := 'Test Suite ';
+        <ST><![CDATA[Source.sName := 'Test Suite';
 TestMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 				   nEventId		:= 1,
 				   eSeverity	:= TcEventSeverity.Error,
