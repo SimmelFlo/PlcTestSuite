@@ -3,10 +3,11 @@
   <POU Name="Test" Id="{9e8aece1-ee26-4cf6-b4f4-25a27cfed9dc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Test IMPLEMENTS I_TestOperation
 VAR
-	_TestId		: T_MaxString;
-	_State		: E_TestStatus;
-	TestMessage : FB_TcMessage;
-    Source      : FB_TcSourceInfo;
+	_TestSuiteName : STRING;
+	_TestId		   : T_MaxString;
+	_State		   : E_TestStatus;
+	TestMessage	   : FB_TcMessage;
+	Source		   : FB_TcSourceInfo;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -102,18 +103,19 @@ VAR
 	ResultString : T_MaxString;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Source.sName := 'Test Suite';
+        <ST><![CDATA[Source.sName := _TestSuiteName;
 TestMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 				   nEventId		:= 1,
 				   eSeverity	:= TcEventSeverity.Error,
-				   ipSourceInfo := 0);
+				   ipSourceInfo := Source);
 
 ResultString := CONCAT('Test failed - ', TestId);
 ResultString := CONCAT(ResultString, '! ');
 ResultString := CONCAT(ResultString, Reason);
 TestMessage.ipArguments.AddString(ResultString);
 TestMessage.Send(0);
-Source.Clear();]]></ST>
+Source.Clear();
+TestMessage.Release();]]></ST>
       </Implementation>
     </Method>
     <Property Name="State" Id="{107dda4b-11bf-4131-8c5f-64011be55284}">
@@ -149,6 +151,17 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[_TestId := TestId;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TestSuiteName" Id="{d7b0c5f4-02c6-4dcf-854f-e251023d9405}">
+      <Declaration><![CDATA[PROPERTY TestSuiteName : String]]></Declaration>
+      <Set Name="Set" Id="{a224d3ab-daa7-49af-bafa-8e932753e41c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_TestSuiteName := TestSuiteName;]]></ST>
         </Implementation>
       </Set>
     </Property>

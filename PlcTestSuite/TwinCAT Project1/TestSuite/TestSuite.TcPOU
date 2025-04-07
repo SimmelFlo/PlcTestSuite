@@ -7,6 +7,7 @@ VAR_GENERIC CONSTANT
 END_VAR
 IMPLEMENTS I_TestSuite
 VAR
+    _TestSuiteName    : STRING;
 	TestCollection	  : ARRAY[0.._MaxTestCount] OF Test;
 	NoAction		  : Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
 	ActiveTest		  : DINT;
@@ -44,8 +45,14 @@ VAR
 	i			 : DINT;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT Complete THEN
+        <ST><![CDATA[IF _TestSuiteName = '' THEN
+	_TestSuiteName := __POUNAME();
+END_IF
+
+IF NOT Complete THEN
 	FOR i := 0 TO _MaxTestCount DO
+		TestCollection[i].TestSuiteName := _TestSuiteName;
+
 		// Detect first running test
 		IF TestCollection[i].State = E_TestStatus.Running THEN
 			ActiveTest := i;
@@ -75,8 +82,8 @@ END_VAR]]></Declaration>
 
 		// Out of tests
 		IF i = _MaxTestCount THEN
-			Test := NoAction;
-            Source.sName := 'Test Suite';
+			Test		 := NoAction;
+			Source.sName := _TestSuiteName;
 			DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 							   nEventId		:= 1,
 							   eSeverity	:= TcEventSeverity.Error,
@@ -85,7 +92,8 @@ END_VAR]]></Declaration>
 			ResultString := CONCAT('Test not added, max Tests exeeded - ', TO_STRING(_MaxTestCount));
 			DoneMessage.ipArguments.AddString(ResultString);
 			DoneMessage.Send(0);
-            Source.Clear();
+			Source.Clear();
+			DoneMessage.Release();
 			Complete := TRUE;
 		END_IF
 	END_FOR
@@ -109,7 +117,7 @@ END_VAR]]></Declaration>
 
 	// Tests finished
 	IF (TotalTestCount = (TotalOkTestCount + TotalNokTestCount)) AND NOT Complete THEN
-        Source.sName := 'Test Suite';
+		Source.sName := _TestSuiteName;
 		DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 						   nEventId		:= 1,
 						   eSeverity	:= TcEventSeverity.Error,
@@ -120,7 +128,8 @@ END_VAR]]></Declaration>
 		ResultString := CONCAT(ResultString, CONCAT(', Failed Tests - ', TO_STRING(TotalNokTestCount)));
 		DoneMessage.ipArguments.AddString(ResultString);
 		DoneMessage.Send(0);
-        Source.Clear();
+		Source.Clear();
+		DoneMessage.Release();
 		Complete := TRUE;
 	END_IF
 ELSE
@@ -128,5 +137,16 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="TestSuiteName" Id="{f585ae52-04ec-4c7c-ae12-2980c5f2d3ed}">
+      <Declaration><![CDATA[PROPERTY TestSuiteName : String]]></Declaration>
+      <Set Name="Set" Id="{7a5fbab5-b375-4a82-a951-31e34b901e54}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_TestSuiteName := TestSuiteName;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
   </POU>
 </TcPlcObject>

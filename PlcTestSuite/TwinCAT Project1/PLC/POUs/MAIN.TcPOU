@@ -7,7 +7,8 @@ VAR
 	ReRun	   : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Test_Counter_AddTwo();
+      <ST><![CDATA[TestSuite.TestSuiteName := 'My Test Test-Suite';
+Test_Counter_AddTwo();
 Test_Counter_SubtractTwo();
 Test_Bool();
 Test_String();
@@ -68,7 +69,7 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 75.75;
+	Expected := 75.999;
 	Actual	 := TestTester.TestLReal;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual, 0.1);
 END_IF]]></ST>

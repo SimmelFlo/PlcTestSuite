@@ -35,5 +35,11 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Set>
     </Property>
+    <Property Name="TestSuiteName" Id="{a7ff451a-993a-4052-aa91-d12de757ae20}">
+      <Declaration><![CDATA[PROPERTY TestSuiteName : String]]></Declaration>
+      <Set Name="Set" Id="{83c21da0-1699-438e-8c3e-0f7fb2dbce58}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
   </Itf>
 </TcPlcObject>
