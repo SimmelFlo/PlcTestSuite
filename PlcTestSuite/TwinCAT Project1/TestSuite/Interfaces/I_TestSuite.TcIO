@@ -2,6 +2,13 @@
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_TestSuite" Id="{d78aa624-4cef-480e-b2e0-77b774c4b77c}">
     <Declaration><![CDATA[INTERFACE I_TestSuite EXTENDS __SYSTEM.IQueryInterface]]></Declaration>
+    <Method Name="ReRunIndividualTest" Id="{d61aeff6-ac2c-47b8-8bc4-43ae8de6c911}">
+      <Declaration><![CDATA[METHOD ReRunIndividualTest
+VAR_INPUT
+	TestId : T_MaxString;
+END_VAR
+]]></Declaration>
+    </Method>
     <Method Name="ReRunTests" Id="{cd5b05a7-7512-4eea-b6a2-26305dbec51d}">
       <Declaration><![CDATA[METHOD ReRunTests
 VAR_INPUT

@@ -21,6 +21,25 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="ReRunIndividualTest" Id="{62f6cae7-bfe8-4b44-a2ef-a751a8e71733}">
+      <Declaration><![CDATA[METHOD ReRunIndividualTest
+VAR_INPUT
+	TestId : T_MaxString;
+END_VAR
+VAR
+	i : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 0 TO _MaxTestCount DO
+	IF TestCollection[i].TestId = TestId THEN
+		TestCollection[i].State := E_TestStatus.Init;
+		ActiveTest := i;
+		Complete := FALSE;
+		EXIT;
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ReRunTests" Id="{149633ad-ed2c-4a71-a7a5-f2bfddf8a7a2}">
       <Declaration><![CDATA[METHOD ReRunTests
 VAR
