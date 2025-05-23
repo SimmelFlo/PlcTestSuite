@@ -3,8 +3,9 @@
   <POU Name="MAIN" Id="{7dbbc5fe-66aa-4f70-a8be-dd1553a601dc}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	TestTester : TestTester;
-	ReRun	   : BOOL;
+	TestTester		: TestTester;
+	ReRun			: BOOL;
+	ReRunSingleTest : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[TestSuite.TestSuiteName := 'My Test Test-Suite';
@@ -17,6 +18,11 @@ Test_Real();
 IF ReRun THEN
 	TestSuite.ReRunTests();
 	ReRun := FALSE;
+END_IF
+
+IF ReRunSingleTest THEN
+	TestSuite.ReRunIndividualTest('MAIN.Test_Counter_AddTwo');
+	ReRunSingleTest := FALSE;
 END_IF]]></ST>
     </Implementation>
     <Method Name="Test_Bool" Id="{0a23e9d2-f7ab-4c19-9735-98437bc044ae}">
@@ -69,7 +75,7 @@ VAR_INST
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
-	Expected := 75.999;
+	Expected := 75.85;
 	Actual	 := TestTester.TestLReal;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual, 0.1);
 END_IF]]></ST>
