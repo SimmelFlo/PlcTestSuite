@@ -9,7 +9,7 @@
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>TestSuite</Name>
-    <ProgramVersion>3.1.4026.14</ProgramVersion>
+    <ProgramVersion>3.1.4026.16</ProgramVersion>
     <WriteBookmarksToFile>true</WriteBookmarksToFile>
     <Application>{443afad7-2429-4f0e-9944-445294c4617a}</Application>
     <TypeSystem>{49d4c3b4-c130-46f9-a816-2b1e6d6eb29d}</TypeSystem>
@@ -64,11 +64,23 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces" />
-    <Folder Include="Structures" />
     <Folder Include="Project Information" />
+    <Folder Include="Structures" />
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Project Information\F_GetCompany.TcPOU">
+      <SubType>Code</SubType>
+      <SystemCall>true</SystemCall>
+    </Compile>
+    <Compile Include="Project Information\F_GetTitle.TcPOU">
+      <SubType>Code</SubType>
+      <SystemCall>true</SystemCall>
+    </Compile>
+    <Compile Include="Project Information\F_GetVersion.TcPOU">
+      <SubType>Code</SubType>
+      <SystemCall>true</SystemCall>
+    </Compile>
     <Compile Include="Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -83,18 +95,6 @@
     </Compile>
     <Compile Include="Interfaces\I_TestOperation.TcIO">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Project Information\F_GetCompany.TcPOU">
-      <SubType>Code</SubType>
-      <SystemCall>true</SystemCall>
-    </Compile>
-    <Compile Include="Project Information\F_GetTitle.TcPOU">
-      <SubType>Code</SubType>
-      <SystemCall>true</SystemCall>
-    </Compile>
-    <Compile Include="Project Information\F_GetVersion.TcPOU">
-      <SubType>Code</SubType>
-      <SystemCall>true</SystemCall>
     </Compile>
     <Compile Include="Structures\E_TestStatus.TcDUT">
       <SubType>Code</SubType>

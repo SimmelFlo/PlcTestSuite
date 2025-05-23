@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="F_GetTitle" Id="{f5776e21-d485-487b-809a-a189afdacb31}" SpecialFunc="None">
+  <POU Name="F_GetTitle" Id="{9a8cac7f-f487-4522-9c01-8bc929adcad3}" SpecialFunc="None">
     <Declaration><![CDATA[// This function has been automatically generated from the project information.
 {attribute 'signature_flag' := '1073741824'}
 {attribute 'TcGenerated'}
