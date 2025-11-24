@@ -9,7 +9,7 @@
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>TestSuite</Name>
-    <ProgramVersion>3.1.4026.16</ProgramVersion>
+    <ProgramVersion>3.1.4026.19</ProgramVersion>
     <WriteBookmarksToFile>true</WriteBookmarksToFile>
     <Application>{443afad7-2429-4f0e-9944-445294c4617a}</Application>
     <TypeSystem>{49d4c3b4-c130-46f9-a816-2b1e6d6eb29d}</TypeSystem>
@@ -17,7 +17,7 @@
     <Implicit_KindOfTask>{c4ee90fc-1033-4ba8-9769-29ed2a6ee59a}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{99d89e70-c8da-4f56-8fe4-4d0d93738b71}</Implicit_Jitter_Distribution>
     <LibraryReferences>{0d499373-b39e-4745-87ca-dc69829d1c1d}</LibraryReferences>
-    <Released>true</Released>
+    <Released>false</Released>
     <AllowChecksForLibrary>false</AllowChecksForLibrary>
     <POUsForPropertyAccessIncluded>true</POUsForPropertyAccessIncluded>
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
@@ -69,6 +69,9 @@
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\I_ResultFile.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Project Information\F_GetCompany.TcPOU">
       <SubType>Code</SubType>
       <SystemCall>true</SystemCall>
