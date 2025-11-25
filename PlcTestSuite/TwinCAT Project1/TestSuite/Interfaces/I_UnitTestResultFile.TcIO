@@ -37,6 +37,12 @@ VAR_INPUT
 	ReInitialize : BOOL := FALSE;
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="Initialized" Id="{13066041-fb66-4ac5-8cb1-564d985f7edb}">
+      <Declaration><![CDATA[PROPERTY Initialized : BOOL]]></Declaration>
+      <Get Name="Get" Id="{214d7296-ccd6-4e4b-b4db-c68a08bccd9f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="SaveResult" Id="{690c3506-9c68-4a55-8088-e8b719c43680}">
       <Declaration><![CDATA[METHOD SaveResult
 VAR_INPUT

@@ -16,7 +16,9 @@ VAR
 	TotalOkTestCount  : UDINT := 0;
 	TotalNokTestCount : UDINT := 0;
 	Complete		  : BOOL;
-	ResultFile		  : I_UnitTestResultFile := GlobalTestSuite.JUnitResultFile;
+	JUnitResultFile	  : JUnitResultFile(TestSuiteParameter.DefaultPath);
+	ResultFile		  : I_UnitTestResultFile := JUnitResultFile;
+	CurrentCycle	  : UDINT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -50,6 +52,7 @@ END_VAR]]></Declaration>
 	TestCollection[i].State := E_TestStatus.Init;
 	ActiveTest				:= 0;
 	Complete				:= FALSE;
+	ResultFile.Initialize(TRUE);
 END_FOR]]></ST>
       </Implementation>
     </Method>
@@ -79,10 +82,18 @@ END_VAR]]></Declaration>
 	_TestSuiteName := __POUNAME();
 END_IF
 
+IF NOT ResultFile.Initialized THEN
+	ResultFile.Initialize();
+END_IF
+
+IF TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount <> CurrentCycle THEN
+	CurrentCycle := TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount;
+	ResultFile.Cyclic();
+END_IF
+
 IF NOT Complete THEN
 	FOR i := 0 TO _MaxTestCount DO
 		TestCollection[i].TestSuiteName := _TestSuiteName;
-
 		// Detect first running test
 		IF TestCollection[i].State = E_TestStatus.Running THEN
 			ActiveTest := i;
@@ -160,6 +171,7 @@ IF NOT Complete THEN
 		DoneMessage.Send(0);
 		Source.Clear();
 		DoneMessage.Release();
+		ResultFile.SaveResult();
 		Complete := TRUE;
 	END_IF
 ELSE

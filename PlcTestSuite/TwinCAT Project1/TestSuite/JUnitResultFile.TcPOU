@@ -3,7 +3,7 @@
   <POU Name="JUnitResultFile" Id="{467a2f7d-ea77-463d-bccb-4ff68e52df26}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK JUnitResultFile IMPLEMENTS I_UnitTestResultFile
 VAR
-	Initialized, Write					: BOOL;
+	_Initialized, Write					: BOOL;
 	XmlDomParser						: FB_XmlDomParser;
 	RootNode, TestSuitesNode, TestSuite : SXmlNode;
 	Path								: STRING;
@@ -90,9 +90,20 @@ TestSuitesNode := XmlDomParser.AppendChild(RootNode,
 										   '',
 										   FALSE);
 
-Initialized := TRUE;]]></ST>
+_Initialized := TRUE;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Initialized" Id="{3d7d628e-0047-482f-96af-148144f8b22c}">
+      <Declaration><![CDATA[PROPERTY Initialized : BOOL]]></Declaration>
+      <Get Name="Get" Id="{998aca69-b6fa-4c38-a66e-64b2cd84ac9d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Initialized := _Initialized;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="SaveResult" Id="{24be214b-5fc2-42d3-8a34-ff3a2fc199dd}">
       <Declaration><![CDATA[METHOD SaveResult]]></Declaration>
       <Implementation>
