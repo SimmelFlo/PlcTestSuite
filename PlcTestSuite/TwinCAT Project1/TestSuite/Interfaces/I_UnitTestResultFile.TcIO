@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_UnitTestResultFile" Id="{e1366dc8-517e-46ad-b1e3-80eafaf62fca}">
+    <Declaration><![CDATA[INTERFACE I_UnitTestResultFile EXTENDS __SYSTEM.IQueryInterface
+]]></Declaration>
+    <Method Name="AddTestCaseResult" Id="{3b1e675c-601a-4597-82c3-21011f29cf49}">
+      <Declaration><![CDATA[METHOD AddTestCaseResult
+VAR_INPUT
+	Name			: STRING;
+	Test			: STRING;
+	Duration		: LREAL;
+	FailtureMessage : STRING := '';
+	FailtureType	: STRING := '';
+	FailtureNote	: STRING := '';
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="AddTestSuite" Id="{336643ed-f4f2-4062-ab5f-cbc7284ffffe}">
+      <Declaration><![CDATA[METHOD AddTestSuite
+VAR_INPUT
+	Name	  : STRING;
+	Tests	  : UDINT;
+	Failtures : UDINT := 0;
+	Errors	  : UDINT := 0;
+	Skipped	  : UDINT := 0;
+	Duration  : LREAL;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Cyclic" Id="{498d2274-e054-4c85-ba80-3f227ed28def}">
+      <Declaration><![CDATA[METHOD Cyclic
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Initialize" Id="{7c254bb1-9728-4958-adfe-eece97237b3f}">
+      <Declaration><![CDATA[METHOD Initialize
+VAR_INPUT
+	ReInitialize : BOOL := FALSE;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="SaveResult" Id="{690c3506-9c68-4a55-8088-e8b719c43680}">
+      <Declaration><![CDATA[METHOD SaveResult
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

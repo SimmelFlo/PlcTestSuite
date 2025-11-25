@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="JUnitResultFile" Id="{467a2f7d-ea77-463d-bccb-4ff68e52df26}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK JUnitResultFile IMPLEMENTS I_UnitTestResultFile
+VAR
+	Initialized, Write					: BOOL;
+	XmlDomParser						: FB_XmlDomParser;
+	RootNode, TestSuitesNode, TestSuite : SXmlNode;
+	Path								: STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddTestCaseResult" Id="{fef2152d-9883-418e-81df-19425d45758e}">
+      <Declaration><![CDATA[METHOD AddTestCaseResult
+VAR_INPUT
+	Name			: STRING;
+	Test			: STRING;
+	Duration		: LREAL;
+	FailtureMessage : STRING := '';
+	FailtureType	: STRING := '';
+	FailtureNote	: STRING := '';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Initialized THEN
+    RETURN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddTestSuite" Id="{b9ed6143-3d62-40dc-ab57-7f199b7a8267}">
+      <Declaration><![CDATA[METHOD AddTestSuite
+VAR_INPUT
+	Name	  : STRING;
+	Tests	  : UDINT;
+	Failtures : UDINT := 0;
+	Errors	  : UDINT := 0;
+	Skipped	  : UDINT := 0;
+	Duration  : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Initialized THEN
+	RETURN;
+END_IF
+
+TestSuite := XmlDomParser.AppendChild(TestSuitesNode,
+									  'testsuite',
+									  'TestSuite Core',
+									  FALSE);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Cyclic" Id="{4a8e3fe5-235e-4dba-86c7-512836695edb}">
+      <Declaration><![CDATA[METHOD Cyclic
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[XmlDomParser.SaveDocumentToFile(Path, Write);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{cf7f13e2-e0dc-4b72-817e-6e09f7f78b6d}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+
+//The return value is not evaluated. For a specific influence, you can also declare the
+
+//methods explicitly and provide additional code there with the standard initialization
+
+//code. You can evaluate the return value.
+METHOD FB_Init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+	bInCopyCode	 : BOOL; // TRUE: the instance will be copied to the copy code afterward (online change)   
+	Path		 : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Path := Path;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Initialize" Id="{23d2b239-3906-4cef-b04c-0fd9ab13f256}">
+      <Declaration><![CDATA[METHOD Initialize
+VAR_INPUT
+	ReInitialize : BOOL := FALSE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Initialized AND NOT ReInitialize THEN
+	RETURN;
+END_IF
+
+XmlDomParser.NewDocument();
+RootNode	   := XmlDomParser.GetDocumentNode();
+TestSuitesNode := XmlDomParser.AppendChild(RootNode,
+										   'testsuites',
+										   '',
+										   FALSE);
+
+Initialized := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SaveResult" Id="{24be214b-5fc2-42d3-8a34-ff3a2fc199dd}">
+      <Declaration><![CDATA[METHOD SaveResult]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Initialized THEN
+	RETURN;
+END_IF
+
+Write := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

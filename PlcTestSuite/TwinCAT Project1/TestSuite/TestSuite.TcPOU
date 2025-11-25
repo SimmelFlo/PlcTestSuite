@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="TestSuite" Id="{d93a9aa9-034f-4b1b-8d51-f63a960f5d15}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK TestSuite 
+    <Declaration><![CDATA[FUNCTION_BLOCK TestSuite
 VAR_GENERIC CONSTANT
-    _MaxTestCount : DINT := 10;
-END_VAR
-IMPLEMENTS I_TestSuite
+	_MaxTestCount : DINT := 10;
+END_VAR IMPLEMENTS I_TestSuite
 VAR
-    _TestSuiteName    : STRING;
+	_TestSuiteName	  : STRING;
 	TestCollection	  : ARRAY[0.._MaxTestCount] OF Test;
 	NoAction		  : Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
 	ActiveTest		  : DINT;
 	DoneMessage		  : FB_TcMessage;
-    Source            : FB_TcSourceInfo;
+	Source			  : FB_TcSourceInfo;
 	TotalTestCount	  : UDINT := 0;
 	TotalOkTestCount  : UDINT := 0;
 	TotalNokTestCount : UDINT := 0;
 	Complete		  : BOOL;
+	ResultFile		  : I_UnitTestResultFile := GlobalTestSuite.JUnitResultFile;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -53,6 +53,17 @@ END_VAR]]></Declaration>
 END_FOR]]></ST>
       </Implementation>
     </Method>
+    <Property Name="ResultFileFunction" Id="{2fc49ca5-ef03-4f26-b851-3c82ac31a69b}">
+      <Declaration><![CDATA[PROPERTY ResultFileFunction : I_UnitTestResultFile]]></Declaration>
+      <Set Name="Set" Id="{951f423d-d7b7-4d8b-85e2-a1939c4e8331}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ResultFile := ResultFileFunction;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="Test" Id="{ed26b7b3-1fa1-4dc2-9f0d-d0fab78d1679}">
       <Declaration><![CDATA[METHOD Test : I_TestOperation
 VAR_INPUT
