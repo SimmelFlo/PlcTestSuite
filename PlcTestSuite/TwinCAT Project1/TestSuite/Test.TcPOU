@@ -8,6 +8,8 @@ VAR
 	_State		   : E_TestStatus;
 	TestMessage	   : FB_TcMessage;
 	Source		   : FB_TcSourceInfo;
+	Stopwatch	   : Stopwatch;
+	ResultFile	   : I_UnitTestResultFile;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -30,7 +32,8 @@ VAR
 	RealActual	   : REAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF Expected.typeclass <> Actual.typeclass THEN
+        <ST><![CDATA[Stopwatch.Stop();
+IF Expected.typeclass <> Actual.typeclass THEN
 	State := E_TestStatus.DoneFailed;
 	ReportAssert('Type missmatch!');
 	RETURN;
@@ -78,15 +81,32 @@ ELSE
 	END_FOR
 END_IF
 
+IF ResultFile <> 0 THEN
+	ResultFile.AddTestCaseResult(_TestSuiteName, TestId, Stopwatch.Elapsed);
+END_IF
+
 State := E_TestStatus.DoneOk;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Duration" Id="{45e82a09-3d77-4e43-90c0-062b39afb45f}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Duration : LREAL]]></Declaration>
+      <Get Name="Get" Id="{c3926804-129a-47ee-908c-b9d9a6725716}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Duration := Stopwatch.Elapsed;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="ExecuteTest" Id="{d3490801-b397-4b9a-8a9d-6332802fd972}">
       <Declaration><![CDATA[METHOD ExecuteTest : BOOL
 VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF State = E_TestStatus.Init THEN
+	Stopwatch.Start();
 	State := E_TestStatus.Running;
 END_IF
 
@@ -115,11 +135,31 @@ ResultString := CONCAT(ResultString, Reason);
 TestMessage.ipArguments.AddString(ResultString);
 TestMessage.Send(0);
 Source.Clear();
-TestMessage.Release();]]></ST>
+TestMessage.Release();
+IF ResultFile <> 0 THEN
+	ResultFile.AddTestCaseResult(_TestSuiteName,
+								 TestId,
+								 Stopwatch.Elapsed,
+								 'Test failed!',
+								 'AssertionError',
+								 Reason);
+END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="ResultFileFunction" Id="{7b529fb8-591c-4188-b3da-fc47f7a437a2}">
+      <Declaration><![CDATA[PROPERTY ResultFileFunction : I_UnitTestResultFile]]></Declaration>
+      <Set Name="Set" Id="{4ccaac66-e459-4c6e-85c3-92277f478409}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ResultFile := ResultFileFunction;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Property Name="State" Id="{107dda4b-11bf-4131-8c5f-64011be55284}">
-      <Declaration><![CDATA[PROPERTY State :  E_TestStatus]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY State :  E_TestStatus]]></Declaration>
       <Get Name="Get" Id="{262d28c9-71be-4402-bd2c-a86901ea6f86}">
         <Declaration><![CDATA[VAR
 END_VAR]]></Declaration>
@@ -136,7 +176,8 @@ END_VAR]]></Declaration>
       </Set>
     </Property>
     <Property Name="TestId" Id="{0723af9d-7a0b-479f-bfbc-daf60795c791}">
-      <Declaration><![CDATA[PROPERTY TestId : T_MaxString]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TestId : T_MaxString]]></Declaration>
       <Get Name="Get" Id="{b9dea5fd-624e-4410-bf21-8a9d9c1236f8}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -155,7 +196,8 @@ END_VAR
       </Set>
     </Property>
     <Property Name="TestSuiteName" Id="{d7b0c5f4-02c6-4dcf-854f-e251023d9405}">
-      <Declaration><![CDATA[PROPERTY TestSuiteName : String]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TestSuiteName : STRING]]></Declaration>
       <Set Name="Set" Id="{a224d3ab-daa7-49af-bafa-8e932753e41c}">
         <Declaration><![CDATA[VAR
 END_VAR

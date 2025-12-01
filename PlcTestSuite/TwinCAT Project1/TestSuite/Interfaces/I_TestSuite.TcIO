@@ -2,6 +2,13 @@
 <TcPlcObject Version="1.1.0.1">
   <Itf Name="I_TestSuite" Id="{d78aa624-4cef-480e-b2e0-77b774c4b77c}">
     <Declaration><![CDATA[INTERFACE I_TestSuite EXTENDS __SYSTEM.IQueryInterface]]></Declaration>
+    <Property Name="Duration" Id="{688b928b-c8ad-4271-8e5d-2d45e72b6796}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Duration : LREAL]]></Declaration>
+      <Get Name="Get" Id="{625dbe0b-aee5-4131-a28b-442e721555f0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="ReRunIndividualTest" Id="{d61aeff6-ac2c-47b8-8bc4-43ae8de6c911}">
       <Declaration><![CDATA[METHOD ReRunIndividualTest
 VAR_INPUT

@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="Stopwatch" Id="{12c968da-c749-41ad-90cd-e029faaf120d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Stopwatch
+VAR
+	StartTime			: T_DCTIME64;
+	EndTime				: T_DCTIME64;
+	PreviousLapEndTime	: T_DCTIME64;
+	PreviousElapsedTime : LREAL;
+	_Running			: BOOL;
+END_VAR
+
+VAR CONSTANT
+	OneNanosecond : LREAL := 1.0E-9;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="Elapsed" Id="{4e533698-8504-4aa8-81b0-6a43a7032c1f}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Elapsed : LREAL]]></Declaration>
+      <Get Name="Get" Id="{66339b33-0080-4f94-b545-d58b4355360f}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF _Running THEN
+	Elapsed := TO_LREAL(F_GetCurDcTickTime64() - StartTime) * OneNanosecond;
+ELSE
+	Elapsed := PreviousElapsedTime;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Lap" Id="{c5cb9f36-c0d7-4f44-b9aa-e868dddb0570}">
+      <Declaration><![CDATA[METHOD Lap : LREAL;
+VAR
+	LapEndTime	: T_DCTIME64;
+	LapDuration : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _Running THEN
+	LapEndTime		   := F_GetActualDcTime64();
+	LapDuration		   := TO_LREAL(LapEndTime - PreviousLapEndTime) * OneNanosecond;
+	PreviousLapEndTime := LapEndTime;
+	Lap				   := LapDuration;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Running" Id="{7a778b49-ab03-481d-9e2a-b4362ac4cc23}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Running : BOOL]]></Declaration>
+      <Get Name="Get" Id="{11f4c2de-745d-4250-b125-1fbd9334699f}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Running := _Running;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Start" Id="{e44fced1-d043-4a7d-adef-9f13eb2c7d07}">
+      <Declaration><![CDATA[METHOD Start]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[StartTime			:= F_GetActualDcTime64();
+PreviousLapEndTime	:= StartTime;
+_Running			:= TRUE;
+PreviousElapsedTime := 0.0;
+PreviousElapsedTime := 0;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Stop" Id="{64d739b5-d7d4-4a89-b456-3537ef0e7c0e}">
+      <Declaration><![CDATA[METHOD Stop : LREAL]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _Running THEN
+	EndTime				:= F_GetActualDcTime64();
+	_Running			:= FALSE;
+	PreviousElapsedTime := TO_LREAL(EndTime - StartTime) * OneNanosecond;
+	Stop				:= PreviousElapsedTime;
+ELSE
+	Stop := 0.0;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <GVL Name="GlobalTestSuite" Id="{65860d76-d62d-4014-99f3-e31b2a55eaef}">
     <Declaration><![CDATA[VAR_GLOBAL
-	TestSuite		: TestSuite<TestSuiteParameter.MaxTestCount>;
+	TestSuite : TestSuite<TestSuiteParameter.MaxTestCount>(TestSuiteParameter.DefaultPath);
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

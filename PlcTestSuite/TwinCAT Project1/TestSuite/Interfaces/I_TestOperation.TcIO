@@ -10,13 +10,21 @@ VAR_INPUT
 	Epsilon	 : LREAL := 0.000001;
 END_VAR]]></Declaration>
     </Method>
+    <Property Name="Duration" Id="{7c7ecec2-c38c-466d-8519-5132370cd9c1}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Duration : LREAL]]></Declaration>
+      <Get Name="Get" Id="{38a696cd-5d5e-4d19-a301-2339b7df8ba5}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Method Name="ExecuteTest" Id="{b962dfa9-06a4-472e-bbe7-928854d9dd2a}">
       <Declaration><![CDATA[METHOD ExecuteTest : BOOL
 VAR_INPUT
 END_VAR]]></Declaration>
     </Method>
     <Property Name="State" Id="{15265f80-3995-432c-9bc2-2c1127cdc374}">
-      <Declaration><![CDATA[PROPERTY State : E_TestStatus]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY State : E_TestStatus]]></Declaration>
       <Get Name="Get" Id="{addd4951-db3c-4ab4-85c4-bed3a300a2e3}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
@@ -27,7 +35,8 @@ END_VAR
       </Set>
     </Property>
     <Property Name="TestId" Id="{7a2b531b-1e78-4625-bf6c-a530812e3b3e}">
-      <Declaration><![CDATA[PROPERTY TestId : T_MaxString]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TestId : T_MaxString]]></Declaration>
       <Get Name="Get" Id="{36d24df8-a9ee-41ce-b400-8b72587288f6}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
@@ -36,7 +45,8 @@ END_VAR
       </Set>
     </Property>
     <Property Name="TestSuiteName" Id="{a7ff451a-993a-4052-aa91-d12de757ae20}">
-      <Declaration><![CDATA[PROPERTY TestSuiteName : String]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TestSuiteName : String]]></Declaration>
       <Set Name="Set" Id="{83c21da0-1699-438e-8c3e-0f7fb2dbce58}">
         <Declaration><![CDATA[]]></Declaration>
       </Set>

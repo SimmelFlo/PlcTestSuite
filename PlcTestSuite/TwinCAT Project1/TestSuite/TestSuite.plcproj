@@ -18,13 +18,12 @@
     <Implicit_Jitter_Distribution>{99d89e70-c8da-4f56-8fe4-4d0d93738b71}</Implicit_Jitter_Distribution>
     <LibraryReferences>{0d499373-b39e-4745-87ca-dc69829d1c1d}</LibraryReferences>
     <Released>false</Released>
-    <AllowChecksForLibrary>false</AllowChecksForLibrary>
     <POUsForPropertyAccessIncluded>true</POUsForPropertyAccessIncluded>
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
     <VirtualLibrary>true</VirtualLibrary>
     <Company>Simmel</Company>
     <Title>Tc3_PlcTestSuite</Title>
-    <ProjectVersion>1.0.9</ProjectVersion>
+    <ProjectVersion>1.1.0</ProjectVersion>
     <DefaultNamespace>Tc3_PlcTestSuite</DefaultNamespace>
     <Author>Simmel Florian</Author>
     <CompilerDefines>VISU_USEPROPERTYINFO</CompilerDefines>
@@ -40,6 +39,10 @@
     </SelectedLibraryCategories>
   </PropertyGroup>
   <ItemGroup>
+    <PlaceholderReference Include="Tc2_EtherCAT">
+      <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_EtherCAT</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_Standard</Namespace>
@@ -68,15 +71,22 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces" />
+    <Folder Include="Functions" />
     <Folder Include="Project Information" />
     <Folder Include="Structures" />
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\I_UnitTestResultFile.TcIO">
+    <Compile Include="Functions\GetValueString.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="JUnitResultFile.TcPOU">
+    <Compile Include="Functions\JUnitResultFile.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Functions\Stopwatch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interfaces\I_UnitTestResultFile.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Project Information\F_GetCompany.TcPOU">
@@ -95,9 +105,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestSuite.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GetValueString.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Interfaces\I_TestSuite.TcIO">
