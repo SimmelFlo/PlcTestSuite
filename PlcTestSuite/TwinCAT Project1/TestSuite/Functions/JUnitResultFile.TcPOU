@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="JUnitResultFile" Id="{467a2f7d-ea77-463d-bccb-4ff68e52df26}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK JUnitResultFile IMPLEMENTS I_UnitTestResultFile
+VAR
+	_Initialized, Write										   : BOOL;
+	XmlDomParser											   : FB_XmlDomParser;
+	RootNode, TestSuitesNode, TestSuite, TestCase, TestCaseSub : SXmlNode;
+	_Path													   : STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddTestCaseResult" Id="{fef2152d-9883-418e-81df-19425d45758e}">
+      <Declaration><![CDATA[METHOD AddTestCaseResult
+VAR_INPUT
+	TestClassName	: STRING;
+	TestName		: STRING;
+	Duration		: LREAL;
+	FailtureMessage : STRING := '';
+	FailtureType	: STRING := '';
+	FailtureNote	: STRING := '';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Initialized THEN
+	RETURN;
+END_IF
+
+TestCase := XmlDomParser.AppendChild(TestSuite,
+									 'testcase',
+									 '',
+									 FALSE);
+
+XmlDomParser.AppendAttribute(TestCase, 'classname', TestClassName);
+XmlDomParser.AppendAttribute(TestCase, 'name', TestName);
+XmlDomParser.AppendAttributeAsDouble(TestCase, 'time', Duration);
+IF FailtureType <> '' THEN
+	TestCaseSub := XmlDomParser.AppendChild(TestCase,
+											'failure',
+											FailtureNote,
+											FALSE);
+
+	XmlDomParser.AppendAttribute(TestCaseSub, 'message', FailtureMessage);
+	XmlDomParser.AppendAttribute(TestCaseSub, 'type', FailtureType);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddTestSuite" Id="{b9ed6143-3d62-40dc-ab57-7f199b7a8267}">
+      <Declaration><![CDATA[METHOD AddTestSuite
+VAR_INPUT
+	Name : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Initialized THEN
+	RETURN;
+END_IF
+
+TestSuite := XmlDomParser.AppendChild(TestSuitesNode,
+									  'testsuite',
+									  '',
+									  FALSE);
+
+XmlDomParser.AppendAttribute(TestSuite, 'name', name);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddTestSuiteStatistics" Id="{37965891-a54c-4d6f-81af-5996d77b7537}">
+      <Declaration><![CDATA[METHOD AddTestSuiteStatistics
+VAR_INPUT
+	Tests	  : UDINT;
+	Failtures : UDINT := 0;
+	Errors	  : UDINT := 0;
+	Skipped	  : UDINT := 0;
+	Duration  : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Initialized THEN
+	RETURN;
+END_IF
+
+IF TestSuite = 0 THEN
+	RETURN;
+END_IF
+
+XmlDomParser.AppendAttributeAsUint(TestSuite, 'tests', Tests);
+XmlDomParser.AppendAttributeAsUint(TestSuite, 'failtures', Failtures);
+XmlDomParser.AppendAttributeAsUint(TestSuite, 'errors', Errors);
+XmlDomParser.AppendAttributeAsUint(TestSuite, 'skipped', Skipped);
+XmlDomParser.AppendAttributeAsDouble(TestSuite, 'time', Duration);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Cyclic" Id="{4a8e3fe5-235e-4dba-86c7-512836695edb}">
+      <Declaration><![CDATA[METHOD Cyclic
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[XmlDomParser.SaveDocumentToFile(_Path, Write);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Initialize" Id="{23d2b239-3906-4cef-b04c-0fd9ab13f256}">
+      <Declaration><![CDATA[METHOD Initialize
+VAR_INPUT
+	ReInitialize : BOOL := FALSE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Initialized AND NOT ReInitialize THEN
+	RETURN;
+END_IF
+
+XmlDomParser.NewDocument();
+RootNode	   := XmlDomParser.GetDocumentNode();
+TestSuitesNode := XmlDomParser.AppendChild(RootNode,
+										   'testsuites',
+										   '',
+										   FALSE);
+
+_Initialized := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Initialized" Id="{3d7d628e-0047-482f-96af-148144f8b22c}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Initialized : BOOL]]></Declaration>
+      <Get Name="Get" Id="{998aca69-b6fa-4c38-a66e-64b2cd84ac9d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Initialized := _Initialized;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Path" Id="{61e6a68d-66c6-4093-b352-4efc4872d68b}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Path : STRING]]></Declaration>
+      <Set Name="Set" Id="{4e012c2e-dd46-405f-b43e-4e46079d4b27}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Path := Path;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="SaveResult" Id="{24be214b-5fc2-42d3-8a34-ff3a2fc199dd}">
+      <Declaration><![CDATA[METHOD SaveResult]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Initialized THEN
+	RETURN;
+END_IF
+
+Write := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

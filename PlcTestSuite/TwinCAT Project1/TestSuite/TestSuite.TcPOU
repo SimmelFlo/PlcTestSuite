@@ -1,26 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="TestSuite" Id="{d93a9aa9-034f-4b1b-8d51-f63a960f5d15}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK TestSuite 
+    <Declaration><![CDATA[FUNCTION_BLOCK TestSuite
 VAR_GENERIC CONSTANT
-    _MaxTestCount : DINT := 10;
-END_VAR
-IMPLEMENTS I_TestSuite
+	_MaxTestCount : DINT := 10;
+END_VAR IMPLEMENTS I_TestSuite
 VAR
-    _TestSuiteName    : STRING;
+	_TestSuiteName	  : STRING;
 	TestCollection	  : ARRAY[0.._MaxTestCount] OF Test;
 	NoAction		  : Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
 	ActiveTest		  : DINT;
 	DoneMessage		  : FB_TcMessage;
-    Source            : FB_TcSourceInfo;
+	Source			  : FB_TcSourceInfo;
 	TotalTestCount	  : UDINT := 0;
 	TotalOkTestCount  : UDINT := 0;
 	TotalNokTestCount : UDINT := 0;
 	Complete		  : BOOL;
+	JUnitResultFile	  : JUnitResultFile;
+	ResultFile		  : I_UnitTestResultFile := JUnitResultFile;
+	CurrentCycle	  : UDINT;
+	Stopwatch		  : Stopwatch;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Property Name="Duration" Id="{7bbb8cbd-2e8a-4da3-8535-e61b5755fdb4}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Duration : LREAL]]></Declaration>
+      <Get Name="Get" Id="{b6553703-1f1d-4dc2-bf9d-f21ab7e15224}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Duration := Stopwatch.Elapsed;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_Init" Id="{d564e65c-6f31-426e-ab10-2c7d7fc7cf41}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+
+//The return value is not evaluated. For a specific influence, you can also declare the
+
+//methods explicitly and provide additional code there with the standard initialization
+
+//code. You can evaluate the return value.
+METHOD FB_Init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+	bInCopyCode	 : BOOL; // TRUE: the instance will be copied to the copy code afterward (online change)   
+	ResultPath	 : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ResultFile <> 0 THEN
+	ResultFile.Path := ResultPath;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ReRunIndividualTest" Id="{62f6cae7-bfe8-4b44-a2ef-a751a8e71733}">
       <Declaration><![CDATA[METHOD ReRunIndividualTest
 VAR_INPUT
@@ -50,9 +85,23 @@ END_VAR]]></Declaration>
 	TestCollection[i].State := E_TestStatus.Init;
 	ActiveTest				:= 0;
 	Complete				:= FALSE;
+	ResultFile.Initialize();
+	Stopwatch.Start();
+	ResultFile.AddTestSuite(Name := _TestSuiteName);
 END_FOR]]></ST>
       </Implementation>
     </Method>
+    <Property Name="ResultFileFunction" Id="{2fc49ca5-ef03-4f26-b851-3c82ac31a69b}">
+      <Declaration><![CDATA[PROPERTY ResultFileFunction : I_UnitTestResultFile]]></Declaration>
+      <Set Name="Set" Id="{951f423d-d7b7-4d8b-85e2-a1939c4e8331}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ResultFile := ResultFileFunction;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="Test" Id="{ed26b7b3-1fa1-4dc2-9f0d-d0fab78d1679}">
       <Declaration><![CDATA[METHOD Test : I_TestOperation
 VAR_INPUT
@@ -68,10 +117,21 @@ END_VAR]]></Declaration>
 	_TestSuiteName := __POUNAME();
 END_IF
 
+IF NOT ResultFile.Initialized THEN
+	ResultFile.Initialize();
+	Stopwatch.Start();
+	ResultFile.AddTestSuite(Name := _TestSuiteName);
+END_IF
+
+IF TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount <> CurrentCycle THEN
+	CurrentCycle := TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount;
+	ResultFile.Cyclic();
+END_IF
+
 IF NOT Complete THEN
 	FOR i := 0 TO _MaxTestCount DO
-		TestCollection[i].TestSuiteName := _TestSuiteName;
-
+		TestCollection[i].TestSuiteName		 := _TestSuiteName;
+		TestCollection[i].ResultFileFunction := ResultFile;
 		// Detect first running test
 		IF TestCollection[i].State = E_TestStatus.Running THEN
 			ActiveTest := i;
@@ -149,6 +209,13 @@ IF NOT Complete THEN
 		DoneMessage.Send(0);
 		Source.Clear();
 		DoneMessage.Release();
+
+		//
+		Stopwatch.Stop();
+		ResultFile.AddTestSuiteStatistics(Tests := TotalTestCount, Failtures := TotalNokTestCount, Duration := Stopwatch.Elapsed);
+		ResultFile.SaveResult();
+
+		//
 		Complete := TRUE;
 	END_IF
 ELSE
@@ -157,7 +224,8 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Property Name="TestSuiteName" Id="{f585ae52-04ec-4c7c-ae12-2980c5f2d3ed}">
-      <Declaration><![CDATA[PROPERTY TestSuiteName : String]]></Declaration>
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TestSuiteName : STRING]]></Declaration>
       <Set Name="Set" Id="{7a5fbab5-b375-4a82-a951-31e34b901e54}">
         <Declaration><![CDATA[VAR
 END_VAR

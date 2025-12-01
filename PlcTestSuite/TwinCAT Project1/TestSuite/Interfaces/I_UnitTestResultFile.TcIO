@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <Itf Name="I_UnitTestResultFile" Id="{e1366dc8-517e-46ad-b1e3-80eafaf62fca}">
+    <Declaration><![CDATA[INTERFACE I_UnitTestResultFile EXTENDS __SYSTEM.IQueryInterface
+]]></Declaration>
+    <Method Name="AddTestCaseResult" Id="{3b1e675c-601a-4597-82c3-21011f29cf49}">
+      <Declaration><![CDATA[METHOD AddTestCaseResult
+VAR_INPUT
+	TestClassName	: STRING;
+	TestName		: STRING;
+	Duration		: LREAL;
+	FailtureMessage : STRING := '';
+	FailtureType	: STRING := '';
+	FailtureNote	: STRING := '';
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="AddTestSuite" Id="{336643ed-f4f2-4062-ab5f-cbc7284ffffe}">
+      <Declaration><![CDATA[METHOD AddTestSuite
+VAR_INPUT
+	Name	  : STRING;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="AddTestSuiteStatistics" Id="{ab144702-dfd4-4808-ac97-0c41b9b09781}">
+      <Declaration><![CDATA[METHOD AddTestSuiteStatistics
+VAR_INPUT
+	Tests	  : UDINT;
+	Failtures : UDINT := 0;
+	Errors	  : UDINT := 0;
+	Skipped	  : UDINT := 0;
+	Duration  : LREAL;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="Cyclic" Id="{498d2274-e054-4c85-ba80-3f227ed28def}">
+      <Declaration><![CDATA[METHOD Cyclic
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Initialize" Id="{7c254bb1-9728-4958-adfe-eece97237b3f}">
+      <Declaration><![CDATA[METHOD Initialize
+VAR_INPUT
+	ReInitialize : BOOL := FALSE;
+END_VAR]]></Declaration>
+    </Method>
+    <Property Name="Initialized" Id="{13066041-fb66-4ac5-8cb1-564d985f7edb}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Initialized : BOOL]]></Declaration>
+      <Get Name="Get" Id="{214d7296-ccd6-4e4b-b4db-c68a08bccd9f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="Path" Id="{d5e878b1-73ea-46b7-af48-f47146e27775}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Path : STRING]]></Declaration>
+      <Set Name="Set" Id="{6d62ca58-efa1-4260-80f9-2e1c1e497795}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="SaveResult" Id="{690c3506-9c68-4a55-8088-e8b719c43680}">
+      <Declaration><![CDATA[METHOD SaveResult
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

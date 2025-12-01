@@ -9,7 +9,7 @@
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>TestSuite</Name>
-    <ProgramVersion>3.1.4026.16</ProgramVersion>
+    <ProgramVersion>3.1.4026.19</ProgramVersion>
     <WriteBookmarksToFile>true</WriteBookmarksToFile>
     <Application>{443afad7-2429-4f0e-9944-445294c4617a}</Application>
     <TypeSystem>{49d4c3b4-c130-46f9-a816-2b1e6d6eb29d}</TypeSystem>
@@ -17,14 +17,13 @@
     <Implicit_KindOfTask>{c4ee90fc-1033-4ba8-9769-29ed2a6ee59a}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{99d89e70-c8da-4f56-8fe4-4d0d93738b71}</Implicit_Jitter_Distribution>
     <LibraryReferences>{0d499373-b39e-4745-87ca-dc69829d1c1d}</LibraryReferences>
-    <Released>true</Released>
-    <AllowChecksForLibrary>false</AllowChecksForLibrary>
+    <Released>false</Released>
     <POUsForPropertyAccessIncluded>true</POUsForPropertyAccessIncluded>
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
     <VirtualLibrary>true</VirtualLibrary>
     <Company>Simmel</Company>
     <Title>Tc3_PlcTestSuite</Title>
-    <ProjectVersion>1.0.9</ProjectVersion>
+    <ProjectVersion>1.1.0</ProjectVersion>
     <DefaultNamespace>Tc3_PlcTestSuite</DefaultNamespace>
     <Author>Simmel Florian</Author>
     <CompilerDefines>VISU_USEPROPERTYINFO</CompilerDefines>
@@ -40,6 +39,10 @@
     </SelectedLibraryCategories>
   </PropertyGroup>
   <ItemGroup>
+    <PlaceholderReference Include="Tc2_EtherCAT">
+      <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_EtherCAT</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_Standard</Namespace>
@@ -56,6 +59,10 @@
       <DefaultResolution>Tc3_EventLogger, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_EventLogger</Namespace>
     </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_JsonXml">
+      <DefaultResolution>Tc3_JsonXml, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_JsonXml</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
@@ -64,11 +71,24 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces" />
+    <Folder Include="Functions" />
     <Folder Include="Project Information" />
     <Folder Include="Structures" />
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\GetValueString.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Functions\JUnitResultFile.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Functions\Stopwatch.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interfaces\I_UnitTestResultFile.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Project Information\F_GetCompany.TcPOU">
       <SubType>Code</SubType>
       <SystemCall>true</SystemCall>
@@ -85,9 +105,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestSuite.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GetValueString.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Interfaces\I_TestSuite.TcIO">
