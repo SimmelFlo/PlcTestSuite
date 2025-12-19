@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.12" ClassName="CNestedPlcProjDef">
-	<Project GUID="{D0E6FA53-CE35-4CC5-84FA-C820784B392D}" Name="TestSuite" PrjFilePath="..\..\TestSuite\TestSuite.plcproj" TmcFilePath="..\..\TestSuite\TestSuite.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" SymbolicMapping="true">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.20" ClassName="CNestedPlcProjDef">
+	<Project GUID="{D0E6FA53-CE35-4CC5-84FA-C820784B392D}" Name="TestSuite" PrjFilePath="..\..\TestSuite\TestSuite.plcproj" TmcFilePath="..\..\TestSuite\TestSuite.tmc" ReloadTmc="true" AmsPort="852" FileArchiveSettings="#x000e" CopyTmcToTarget="true" CopyTpyToTarget="false" SymbolicMapping="true">
 		<Instance File="TestSuite Instance.xti"/>
 	</Project>
 </TcSmItem>

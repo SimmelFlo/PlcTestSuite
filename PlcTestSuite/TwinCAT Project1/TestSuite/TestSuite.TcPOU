@@ -57,10 +57,12 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="ReRunIndividualTest" Id="{62f6cae7-bfe8-4b44-a2ef-a751a8e71733}">
-      <Declaration><![CDATA[METHOD ReRunIndividualTest
+      <Declaration><![CDATA[{attribute 'TcRpcEnable':='1'}
+METHOD ReRunIndividualTest
 VAR_INPUT
 	TestId : T_MaxString;
 END_VAR
+
 VAR
 	i : DINT;
 END_VAR]]></Declaration>
@@ -76,7 +78,8 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="ReRunTests" Id="{149633ad-ed2c-4a71-a7a5-f2bfddf8a7a2}">
-      <Declaration><![CDATA[METHOD ReRunTests
+      <Declaration><![CDATA[{attribute 'TcRpcEnable':='1'}
+METHOD ReRunTests
 VAR
 	i : DINT;
 END_VAR]]></Declaration>
