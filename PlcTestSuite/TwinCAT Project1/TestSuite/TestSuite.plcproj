@@ -23,7 +23,7 @@
     <VirtualLibrary>true</VirtualLibrary>
     <Company>Simmel</Company>
     <Title>Tc3_PlcTestSuite</Title>
-    <ProjectVersion>1.1.1</ProjectVersion>
+    <ProjectVersion>1.1.2</ProjectVersion>
     <DefaultNamespace>Tc3_PlcTestSuite</DefaultNamespace>
     <Author>Simmel Florian</Author>
     <CompilerDefines>VISU_USEPROPERTYINFO</CompilerDefines>
@@ -77,6 +77,9 @@
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\AdsLogger.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Functions\GetValueString.TcPOU">
       <SubType>Code</SubType>
     </Compile>
