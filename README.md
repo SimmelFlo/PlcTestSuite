@@ -64,6 +64,7 @@ Default epsilon: `0.000001`
 
 ## Version History
 
+**v1.1.2** - Added ADS logging functionality
 **v1.1.1** - RPC enabled for `ReRunTests()` and `ReRunIndividualTest()` methods
 **v1.1.0** - Result file generation (JUnit XML)
 **v1.0.9** - Enhanced test infrastructure
