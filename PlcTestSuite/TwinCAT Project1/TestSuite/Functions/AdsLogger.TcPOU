@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="AdsLogger" Id="{d9621f8c-9eee-45dc-90fc-0a0b1213b410}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK AdsLogger
+VAR
+    Enabled : REFERENCE TO  BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{9b642cf8-f5ee-4a0e-955e-2a3d96f6407f}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change) 
+    Enabled : REFERENCE TO BOOL;  
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Enabled Ref= Enabled;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogMessage" Id="{4479acd5-067f-4d08-8bcc-fde481c11dae}">
+      <Declaration><![CDATA[METHOD LogMessage
+VAR_INPUT
+	Message : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF THIS^.Enabled THEN
+	ADSLOGSTR(ADSLOG_MSGTYPE_HINT, Message, '');
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

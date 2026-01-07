@@ -3,8 +3,8 @@
   <GVL Name="TestSuiteParameter" Id="{71977508-7c74-4ec9-b7a4-3255aee38094}" ParameterList="True">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
-	MaxTestCount : DINT	  := 50;
-	DefaultPath	 : STRING := 'C:\ProgramData\Beckhoff\TwinCAT\3.1\Boot\TEST_Result.xml';
+	MaxTestCount	  : DINT   := 50;
+	DefaultPath		  : STRING := 'C:\ProgramData\Beckhoff\TwinCAT\3.1\Boot\TEST_Result.xml';
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

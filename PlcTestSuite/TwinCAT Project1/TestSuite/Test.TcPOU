@@ -10,6 +10,7 @@ VAR
 	Source		   : FB_TcSourceInfo;
 	Stopwatch	   : Stopwatch;
 	ResultFile	   : I_UnitTestResultFile;
+	AdsLogger	   : AdsLogger(GlobalTestSuite.AdsLoggingEnabled);
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -85,6 +86,7 @@ IF ResultFile <> 0 THEN
 	ResultFile.AddTestCaseResult(_TestSuiteName, TestId, Stopwatch.Elapsed);
 END_IF
 
+AdsLogger.LogMessage(Concat('Test Executed: ', TestId));
 State := E_TestStatus.DoneOk;]]></ST>
       </Implementation>
     </Method>
@@ -136,6 +138,7 @@ TestMessage.ipArguments.AddString(ResultString);
 TestMessage.Send(0);
 Source.Clear();
 TestMessage.Release();
+AdsLogger.LogMessage(Concat('Test Executed: ', TestId));
 IF ResultFile <> 0 THEN
 	ResultFile.AddTestCaseResult(_TestSuiteName,
 								 TestId,
