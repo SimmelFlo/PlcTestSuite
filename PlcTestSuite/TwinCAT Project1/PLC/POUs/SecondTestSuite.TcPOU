@@ -24,7 +24,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
 	Expected := 2;
-	Actual	 := 0;//1 + 1;
+	Actual	 := 1 + 1;
 	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
 END_IF]]></ST>
       </Implementation>
