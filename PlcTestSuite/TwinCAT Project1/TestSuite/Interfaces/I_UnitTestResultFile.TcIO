@@ -9,9 +9,9 @@ VAR_INPUT
 	TestClassName	: STRING;
 	TestName		: STRING;
 	Duration		: LREAL;
-	FailtureMessage : STRING := '';
-	FailtureType	: STRING := '';
-	FailtureNote	: STRING := '';
+	FailureMessage : STRING := '';
+	FailureType	: STRING := '';
+	FailureNote	: STRING := '';
 END_VAR]]></Declaration>
     </Method>
     <Method Name="AddTestSuite" Id="{336643ed-f4f2-4062-ab5f-cbc7284ffffe}">
@@ -23,8 +23,9 @@ END_VAR]]></Declaration>
     <Method Name="AddTestSuiteStatistics" Id="{ab144702-dfd4-4808-ac97-0c41b9b09781}">
       <Declaration><![CDATA[METHOD AddTestSuiteStatistics
 VAR_INPUT
+	Name	  : STRING;
 	Tests	  : UDINT;
-	Failtures : UDINT := 0;
+	Failures : UDINT := 0;
 	Errors	  : UDINT := 0;
 	Skipped	  : UDINT := 0;
 	Duration  : LREAL;

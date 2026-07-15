@@ -16,10 +16,11 @@ VAR
 	TotalOkTestCount  : UDINT := 0;
 	TotalNokTestCount : UDINT := 0;
 	Complete		  : BOOL;
-	JUnitResultFile	  : JUnitResultFile;
-	ResultFile		  : I_UnitTestResultFile := JUnitResultFile;
+	ResultFile		  : I_UnitTestResultFile;
+	_ResultFileAdded  : BOOL;
 	CurrentCycle	  : UDINT;
 	Stopwatch		  : Stopwatch;
+	_TestOverflowCount : UDINT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -47,12 +48,12 @@ END_VAR
 METHOD FB_Init : BOOL
 VAR_INPUT
 	bInitRetains : BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
-	bInCopyCode	 : BOOL; // TRUE: the instance will be copied to the copy code afterward (online change)   
-	ResultPath	 : STRING;
+	bInCopyCode	 : BOOL; // TRUE: the instance will be copied to the copy code afterward (online change)
+	ResultFile	 : I_UnitTestResultFile;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF ResultFile <> 0 THEN
-	ResultFile.Path := ResultPath;
+	THIS^.ResultFile := ResultFile;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -120,7 +121,8 @@ END_VAR]]></Declaration>
 	_TestSuiteName := __POUNAME();
 END_IF
 
-IF NOT ResultFile.Initialized THEN
+IF NOT _ResultFileAdded THEN
+	_ResultFileAdded := TRUE;
 	ResultFile.Initialize();
 	Stopwatch.Start();
 	ResultFile.AddTestSuite(Name := _TestSuiteName);
@@ -164,8 +166,9 @@ IF NOT Complete THEN
 
 		// Out of tests
 		IF i = _MaxTestCount THEN
-			Test		 := NoAction;
-			Source.sName := _TestSuiteName;
+			Test			   := NoAction;
+			_TestOverflowCount := _TestOverflowCount + 1;
+			Source.sName	   := _TestSuiteName;
 			DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
 							   nEventId		:= 1,
 							   eSeverity	:= TcEventSeverity.Error,
@@ -215,7 +218,7 @@ IF NOT Complete THEN
 
 		//
 		Stopwatch.Stop();
-		ResultFile.AddTestSuiteStatistics(Tests := TotalTestCount, Failtures := TotalNokTestCount, Duration := Stopwatch.Elapsed);
+		ResultFile.AddTestSuiteStatistics(Name := _TestSuiteName, Tests := TotalTestCount, Failures := TotalNokTestCount, Duration := Stopwatch.Elapsed);
 		ResultFile.SaveResult();
 
 		//
@@ -226,6 +229,18 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="TestOverflowCount" Id="{4d5e6f70-8192-4a03-8b1c-2d3e4f506172}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TestOverflowCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{5e6f7081-9203-4a14-9c2d-3e4f50617283}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestOverflowCount := _TestOverflowCount;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="TestSuiteName" Id="{f585ae52-04ec-4c7c-ae12-2980c5f2d3ed}">
       <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
 PROPERTY TestSuiteName : STRING]]></Declaration>

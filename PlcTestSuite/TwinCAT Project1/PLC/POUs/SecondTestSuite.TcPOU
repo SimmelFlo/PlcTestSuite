@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="SecondTestSuite" Id="{a1e2f3c4-5b6d-4a7e-9f8c-1d2e3f4a5b6c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM SecondTestSuite
+VAR
+	TestSuite : TestSuite<TestSuiteParameter.MaxTestCount>(ResultFile := JUnitResultFile);
+	ReRun	  : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TestSuite.TestSuiteName := 'My Second Test-Suite';
+Test_OnePlusOne();
+
+IF ReRun THEN
+	TestSuite.ReRunTests();
+	ReRun := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="Test_OnePlusOne" Id="{c7d8e9f0-1a2b-4c3d-8e4f-5a6b7c8d9e0f}">
+      <Declaration><![CDATA[METHOD Test_OnePlusOne
+VAR_INST
+	Expected : DINT;
+	Actual	 : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	Expected := 2;
+	Actual	 := 0;//1 + 1;
+	TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
