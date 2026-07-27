@@ -1,12 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="JUnitResultFile" Id="{467a2f7d-ea77-463d-bccb-4ff68e52df26}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK JUnitResultFile IMPLEMENTS I_UnitTestResultFile
+    <Declaration><![CDATA[FUNCTION_BLOCK JUnitResultFile
+VAR_GENERIC CONSTANT
+	_MaxTestSuiteCount : DINT := 10;
+END_VAR IMPLEMENTS I_UnitTestResultFile
 VAR
 	_Initialized, Write										   : BOOL;
 	XmlDomParser											   : FB_XmlDomParser;
 	RootNode, TestSuitesNode, TestSuite, TestCase, TestCaseSub : SXmlNode;
 	_Path													   : STRING;
+	SuiteNames												   : ARRAY[0.._MaxTestSuiteCount] OF STRING;
+	SuiteNodes												   : ARRAY[0.._MaxTestSuiteCount] OF SXmlNode;
+	SuiteCount												   : DINT;
+	DoneMessage												   : FB_TcMessage;
+	Source													   : FB_TcSourceInfo;
+	_SuiteOverflowCount										   : UDINT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -17,16 +26,24 @@ VAR_INPUT
 	TestClassName	: STRING;
 	TestName		: STRING;
 	Duration		: LREAL;
-	FailtureMessage : STRING := '';
-	FailtureType	: STRING := '';
-	FailtureNote	: STRING := '';
+	FailureMessage : STRING := '';
+	FailureType	: STRING := '';
+	FailureNote	: STRING := '';
+END_VAR
+VAR
+	SuiteNode : SXmlNode;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Initialized THEN
 	RETURN;
 END_IF
 
-TestCase := XmlDomParser.AppendChild(TestSuite,
+SuiteNode := FindSuiteNode(TestClassName);
+IF SuiteNode = 0 THEN
+	RETURN;
+END_IF
+
+TestCase := XmlDomParser.AppendChild(SuiteNode,
 									 'testcase',
 									 '',
 									 FALSE);
@@ -34,14 +51,14 @@ TestCase := XmlDomParser.AppendChild(TestSuite,
 XmlDomParser.AppendAttribute(TestCase, 'classname', TestClassName);
 XmlDomParser.AppendAttribute(TestCase, 'name', TestName);
 XmlDomParser.AppendAttributeAsDouble(TestCase, 'time', Duration);
-IF FailtureType <> '' THEN
+IF FailureType <> '' THEN
 	TestCaseSub := XmlDomParser.AppendChild(TestCase,
 											'failure',
-											FailtureNote,
+											FailureNote,
 											FALSE);
 
-	XmlDomParser.AppendAttribute(TestCaseSub, 'message', FailtureMessage);
-	XmlDomParser.AppendAttribute(TestCaseSub, 'type', FailtureType);
+	XmlDomParser.AppendAttribute(TestCaseSub, 'message', FailureMessage);
+	XmlDomParser.AppendAttribute(TestCaseSub, 'type', FailureType);
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -49,9 +66,18 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD AddTestSuite
 VAR_INPUT
 	Name : STRING;
+END_VAR
+VAR
+	ResultString : T_MaxString;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Initialized THEN
+	RETURN;
+END_IF
+
+// Reuse the existing node if this suite name was already added (shared result file across multiple TestSuite instances)
+TestSuite := FindSuiteNode(Name);
+IF TestSuite <> 0 THEN
 	RETURN;
 END_IF
 
@@ -60,32 +86,57 @@ TestSuite := XmlDomParser.AppendChild(TestSuitesNode,
 									  '',
 									  FALSE);
 
-XmlDomParser.AppendAttribute(TestSuite, 'name', name);]]></ST>
+XmlDomParser.AppendAttribute(TestSuite, 'name', name);
+
+IF SuiteCount <= _MaxTestSuiteCount THEN
+	SuiteNames[SuiteCount] := Name;
+	SuiteNodes[SuiteCount] := TestSuite;
+	SuiteCount			   := SuiteCount + 1;
+ELSE
+	_SuiteOverflowCount := _SuiteOverflowCount + 1;
+
+	Source.sName := Name;
+	DoneMessage.Create(eventClass	:= TC_EVENT_CLASSES.TestEvents,
+					   nEventId		:= 1,
+					   eSeverity	:= TcEventSeverity.Error,
+					   ipSourceInfo := Source);
+
+	ResultString := CONCAT('TestSuite not added, max TestSuites exeeded - ', TO_STRING(_MaxTestSuiteCount));
+	DoneMessage.ipArguments.AddString(ResultString);
+	DoneMessage.Send(0);
+	Source.Clear();
+	DoneMessage.Release();
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="AddTestSuiteStatistics" Id="{37965891-a54c-4d6f-81af-5996d77b7537}">
       <Declaration><![CDATA[METHOD AddTestSuiteStatistics
 VAR_INPUT
+	Name	  : STRING;
 	Tests	  : UDINT;
-	Failtures : UDINT := 0;
+	Failures : UDINT := 0;
 	Errors	  : UDINT := 0;
 	Skipped	  : UDINT := 0;
 	Duration  : LREAL;
+END_VAR
+VAR
+	SuiteNode : SXmlNode;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Initialized THEN
 	RETURN;
 END_IF
 
-IF TestSuite = 0 THEN
+SuiteNode := FindSuiteNode(Name);
+IF SuiteNode = 0 THEN
 	RETURN;
 END_IF
 
-XmlDomParser.AppendAttributeAsUint(TestSuite, 'tests', Tests);
-XmlDomParser.AppendAttributeAsUint(TestSuite, 'failtures', Failtures);
-XmlDomParser.AppendAttributeAsUint(TestSuite, 'errors', Errors);
-XmlDomParser.AppendAttributeAsUint(TestSuite, 'skipped', Skipped);
-XmlDomParser.AppendAttributeAsDouble(TestSuite, 'time', Duration);]]></ST>
+XmlDomParser.AppendAttributeAsUint(SuiteNode, 'tests', Tests);
+XmlDomParser.AppendAttributeAsUint(SuiteNode, 'failures', Failures);
+XmlDomParser.AppendAttributeAsUint(SuiteNode, 'errors', Errors);
+XmlDomParser.AppendAttributeAsUint(SuiteNode, 'skipped', Skipped);
+XmlDomParser.AppendAttributeAsDouble(SuiteNode, 'time', Duration);]]></ST>
       </Implementation>
     </Method>
     <Method Name="Cyclic" Id="{4a8e3fe5-235e-4dba-86c7-512836695edb}">
@@ -93,6 +144,43 @@ XmlDomParser.AppendAttributeAsDouble(TestSuite, 'time', Duration);]]></ST>
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[XmlDomParser.SaveDocumentToFile(_Path, Write);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{5f9e5f1d-2f0b-4d1a-8a7e-9c3a1e6b4d2f}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+
+//The return value is not evaluated. For a specific influence, you can also declare the
+
+//methods explicitly and provide additional code there with the standard initialization
+
+//code. You can evaluate the return value.
+METHOD FB_Init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+	bInCopyCode	 : BOOL; // TRUE: the instance will be copied to the copy code afterward (online change)
+	Path		 : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_Path := Path;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FindSuiteNode" Id="{8c1f2e3d-4b5a-4c6d-9e7f-0a1b2c3d4e5f}">
+      <Declaration><![CDATA[METHOD PRIVATE FindSuiteNode : SXmlNode
+VAR_INPUT
+	Name : STRING;
+END_VAR
+VAR
+	i : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FindSuiteNode := 0;
+
+FOR i := 0 TO SuiteCount - 1 DO
+	IF SuiteNames[i] = Name THEN
+		FindSuiteNode := SuiteNodes[i];
+		RETURN;
+	END_IF
+END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="Initialize" Id="{23d2b239-3906-4cef-b04c-0fd9ab13f256}">
@@ -112,6 +200,7 @@ TestSuitesNode := XmlDomParser.AppendChild(RootNode,
 										   '',
 										   FALSE);
 
+SuiteCount	 := 0;
 _Initialized := TRUE;]]></ST>
       </Implementation>
     </Method>
@@ -149,5 +238,17 @@ END_IF
 Write := TRUE;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="SuiteOverflowCount" Id="{2b3c4d5e-6f70-4a81-9b2c-3d4e5f607182}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY SuiteOverflowCount : UDINT]]></Declaration>
+      <Get Name="Get" Id="{3c4d5e6f-7081-4a92-8b3c-4d5e60718293}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SuiteOverflowCount := _SuiteOverflowCount;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
   </POU>
 </TcPlcObject>
