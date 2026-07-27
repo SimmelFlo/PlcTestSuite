@@ -23,7 +23,7 @@
     <VirtualLibrary>true</VirtualLibrary>
     <Company>Simmel</Company>
     <Title>Tc3_PlcTestSuite</Title>
-    <ProjectVersion>1.1.3</ProjectVersion>
+    <ProjectVersion>1.1.4</ProjectVersion>
     <DefaultNamespace>Tc3_PlcTestSuite</DefaultNamespace>
     <Author>Simmel Florian</Author>
     <CompilerDefines>VISU_USEPROPERTYINFO</CompilerDefines>
