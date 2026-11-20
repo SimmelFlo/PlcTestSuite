@@ -2,11 +2,11 @@
 
 A user-friendly unit testing framework for TwinCAT 3 PLC programmers, designed to lower the barriers to Test-Driven Development.
 
-Current version: **v1.1.4** (`Tc3_PlcTestSuite`)
+Current version: **v1.1.5** (`Tc3_PlcTestSuite`)
 
 ## Installation
 
-1. Download the latest `TestSuite_V1.1.4.library` from the [`Releases`](Releases) folder.
+1. Download the latest `TestSuite_V1.1.5.library` from the [`Releases`](Releases) folder.
 2. In TwinCAT XAE, open `PLC` -> `References` -> right-click -> `Library Repository...` -> `Install...` and select the downloaded file.
 3. Right-click `References` -> `Add library...` and pick `Tc3_PlcTestSuite` (company: *Simmel*).
 
@@ -159,6 +159,7 @@ A failed test adds a `<failure>` element with the assertion details:
 
 ## Version History
 
+**v1.1.5** - Fixed the runner letting the second registered test start while the first one was still running (`ActiveTest` used 0 for both "no test running" and "test 0 running"; it now uses -1 for none). Fixed `ReRunTests()` looping to the library parameter `MaxTestCount` instead of the runner's own size, which wrote past the end of the test array of a runner smaller than `MaxTestCount`, and re-initialising the result file once per loop pass
 **v1.1.4** - Fixed debug line left in the example `SecondTestSuite` test
 **v1.1.3** - Constructor-injected result files, multiple test suites sharing one result file, `MaxTestSuiteCount` limit with overflow handling, fixed `failures` attribute spelling
 **v1.1.2** - Added ADS logging functionality

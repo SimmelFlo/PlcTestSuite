@@ -9,7 +9,7 @@ VAR
 	_TestSuiteName	  : STRING;
 	TestCollection	  : ARRAY[0.._MaxTestCount] OF Test;
 	NoAction		  : Test := (TestId := 'No Action', State := E_TestStatus.DoneOk);
-	ActiveTest		  : DINT;
+	ActiveTest		  : DINT := -1; // index of the test that owns the runner; -1 = no test running (0 is a valid test index)
 	DoneMessage		  : FB_TcMessage;
 	Source			  : FB_TcSourceInfo;
 	TotalTestCount	  : UDINT := 0;
@@ -85,14 +85,14 @@ VAR
 	i : DINT;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[FOR i := 0 TO TestSuiteParameter.MaxTestCount DO
+        <ST><![CDATA[FOR i := 0 TO _MaxTestCount DO
 	TestCollection[i].State := E_TestStatus.Init;
-	ActiveTest				:= 0;
-	Complete				:= FALSE;
-	ResultFile.Initialize();
-	Stopwatch.Start();
-	ResultFile.AddTestSuite(Name := _TestSuiteName);
-END_FOR]]></ST>
+END_FOR
+ActiveTest := -1;
+Complete   := FALSE;
+ResultFile.Initialize();
+Stopwatch.Start();
+ResultFile.AddTestSuite(Name := _TestSuiteName);]]></ST>
       </Implementation>
     </Method>
     <Property Name="ResultFileFunction" Id="{2fc49ca5-ef03-4f26-b851-3c82ac31a69b}">
@@ -142,13 +142,15 @@ IF NOT Complete THEN
 			ActiveTest := i;
 		END_IF
 
-		IF TestCollection[ActiveTest].State >= E_TestStatus.DoneOk THEN
-			ActiveTest := 0;
+		// The active test has finished: nobody owns the runner any more
+		// AND_THEN short-circuits; plain AND would evaluate TestCollection[-1] and page fault
+		IF (ActiveTest >= 0) AND_THEN (TestCollection[ActiveTest].State >= E_TestStatus.DoneOk) THEN
+			ActiveTest := -1;
 		END_IF
 
 		// Get existing Test
 		IF (TestCollection[i].TestId = TestId) THEN
-			IF (ActiveTest = i) OR (ActiveTest = 0) THEN
+			IF (ActiveTest = i) OR (ActiveTest = -1) THEN
 				Test := TestCollection[i];
 			ELSE
 				Test := NoAction;

@@ -6,6 +6,7 @@ VAR
 	TestTester		: TestTester;
 	ReRun			: BOOL;
 	ReRunSingleTest : BOOL;
+    TestSuiteOverflow:TestSuiteOverflow;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[TestSuite.TestSuiteName := 'My Test Test-Suite';
@@ -16,6 +17,7 @@ Test_String();
 Test_Lreal();
 Test_Real();
 SecondTestSuite();
+ExecutionOrderTestSuite();
 TestSuiteOverflow();
 IF ReRun THEN
 	TestSuite.ReRunTests();

@@ -119,7 +119,7 @@ Alternative result file implementations can be created by implementing `I_UnitTe
 
 ## Key Implementation Details
 
-- Tests run sequentially, one per cycle, controlled by the `ActiveTest` index in `TestSuite`
+- Tests run sequentially, one per cycle, controlled by the `ActiveTest` index in `TestSuite` (-1 = no test running; 0 is a valid test index)
 - Each test gets a unique stopwatch for duration tracking
 - Test completion triggers TwinCAT event messages with statistics
 - The framework uses TwinCAT's `TwinCAT_SystemInfoVarList._TaskInfo[GETCURTASKINDEXEX()].CycleCount` to detect new PLC cycles
