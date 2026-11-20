@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="TestSuiteOverflow" Id="{d4e5f6a7-8b9c-4d0e-8f1a-2b3c4d5e6f70}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM TestSuiteOverflow
+    <Declaration><![CDATA[FUNCTION_BLOCK TestSuiteOverflow
 VAR
+    // Junk instances only used to demonstrate/verify the overflow messages - their XML
+	// output is not meant to be inspected by a user, so it is kept out of TEST_Result.xml.
+	JunkResultFile : JUnitResultFile<2>('C:\ProgramData\Beckhoff\TwinCAT\3.1\Boot\TEST_InstanceOverflow_Result.xml');
+
     TestSuiteOverFlow : TestSuite<2>(ResultFile := JUnitResultFile);
 	ReRun		   : BOOL;
 END_VAR]]></Declaration>
@@ -20,9 +24,6 @@ END_IF]]></ST>
     <Method Name="Test_TestInstanceOverflow" Id="{e5f6a7b8-9c0d-4e1f-8a2b-3c4d5e6f7081}">
       <Declaration><![CDATA[METHOD Test_TestInstanceOverflow
 VAR_INST
-	// Junk instances only used to demonstrate/verify the overflow messages - their XML
-	// output is not meant to be inspected by a user, so it is kept out of TEST_Result.xml.
-	JunkResultFile : JUnitResultFile<2>('C:\ProgramData\Beckhoff\TwinCAT\3.1\Boot\TEST_InstanceOverflow_Result.xml');
 	JunkTestSuite  : TestSuite<2>(ResultFile := JunkResultFile);
 
 	Expected : BOOL;

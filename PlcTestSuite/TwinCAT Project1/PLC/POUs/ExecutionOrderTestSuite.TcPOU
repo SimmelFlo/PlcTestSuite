@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="ExecutionOrderTestSuite" Id="{5b8c1d2e-7f3a-4e90-b6a1-c4d5e6f70812}" SpecialFunc="None">
+    <Declaration><![CDATA[// Verifies that the tests of a suite run strictly one after another, in registration order.
+// Every test holds the runner for HoldScans scans before it asserts, so if the suite ever let a
+// second test start while one is still running, BeginTest() would see Busy <> 0 and flag it.
+PROGRAM ExecutionOrderTestSuite
+VAR CONSTANT
+	HoldScans : DINT := 3;
+END_VAR
+VAR
+	TestSuite	: TestSuite<TestSuiteParameter.MaxTestCount>(ResultFile := JUnitResultFile);
+	ReRun		: BOOL;
+
+	Running		: ARRAY[1..5] OF BOOL;	// test has begun and not yet finished
+	Overlapped	: ARRAY[1..5] OF BOOL;	// test ran at the same time as another test
+	StartCount	: DINT;	// number of tests started in this run
+END_VAR
+VAR_TEMP
+    j:USINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TestSuite.TestSuiteName := 'Execution Order Test-Suite';
+Test_Order_1();
+Test_Order_2();
+Test_Order_3();
+Test_Order_4();
+Test_Order_5();
+
+IF ReRun THEN
+    // Resest the result vars
+    StartCount := 0;
+	FOR j := 1 TO 5 DO
+		Running[j]	  := FALSE;
+		Overlapped[j] := FALSE;
+	END_FOR
+    
+    // Rerun
+	TestSuite.ReRunTests();
+	ReRun := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="BeginTest" Id="{6c9d2e3f-8a4b-4fa1-87b2-d5e6f7081923}">
+      <Declaration><![CDATA[METHOD PRIVATE BeginTest
+VAR_INPUT
+	Index : DINT;
+END_VAR
+VAR
+	j : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Starting while another test is still running flags both tests, and only those two
+FOR j := 1 TO 5 DO
+	IF (j <> Index) AND Running[j] THEN
+		Overlapped[Index] := TRUE;
+		Overlapped[j]	  := TRUE;
+	END_IF
+END_FOR
+
+Running[Index] := TRUE;
+StartCount	   := StartCount + 1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EndTest" Id="{7dae3f40-9b5c-40b2-98c3-e6f708192a34}">
+      <Declaration><![CDATA[// Returns Index when the test started in its expected position without overlapping any other
+// test, -1 when another test overlapped it, otherwise the position it actually started in.
+METHOD PRIVATE EndTest : DINT
+VAR_INPUT
+	Index : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Overlapped[Index] THEN
+	EndTest := -1;
+ELSIF StartCount <> Index THEN
+	EndTest := StartCount;
+ELSE
+	EndTest := Index;
+END_IF
+
+Running[Index] := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Order_1" Id="{8ebf4051-ac6d-41c3-a9d4-f708192a3b45}">
+      <Declaration><![CDATA[METHOD Test_Order_1
+VAR_INST
+	Expected  : DINT;
+	Actual	  : DINT;
+	ScanCount : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	IF ScanCount = 0 THEN
+		BeginTest(1);
+	END_IF
+	ScanCount := ScanCount + 1;
+
+	IF ScanCount >= HoldScans THEN
+		ScanCount := 0;
+		Expected  := 1;
+		Actual	  := EndTest(1);
+		TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Order_2" Id="{9fc05162-bd7e-42d4-8ae5-08192a3b4c56}">
+      <Declaration><![CDATA[METHOD Test_Order_2
+VAR_INST
+	Expected  : DINT;
+	Actual	  : DINT;
+	ScanCount : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	IF ScanCount = 0 THEN
+		BeginTest(2);
+	END_IF
+	ScanCount := ScanCount + 1;
+
+	IF ScanCount >= HoldScans THEN
+		ScanCount := 0;
+		Expected  := 2;
+		Actual	  := EndTest(2);
+		TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Order_3" Id="{a0d16273-ce8f-43e5-9bf6-192a3b4c5d67}">
+      <Declaration><![CDATA[METHOD Test_Order_3
+VAR_INST
+	Expected  : DINT;
+	Actual	  : DINT;
+	ScanCount : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	IF ScanCount = 0 THEN
+		BeginTest(3);
+	END_IF
+	ScanCount := ScanCount + 1;
+
+	IF ScanCount >= HoldScans THEN
+		ScanCount := 0;
+		Expected  := 3;
+		Actual	  := EndTest(3);
+		TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Order_4" Id="{b1e27384-df90-44f6-a0a7-2a3b4c5d6e78}">
+      <Declaration><![CDATA[METHOD Test_Order_4
+VAR_INST
+	Expected  : DINT;
+	Actual	  : DINT;
+	ScanCount : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	IF ScanCount = 0 THEN
+		BeginTest(4);
+	END_IF
+	ScanCount := ScanCount + 1;
+
+	IF ScanCount >= HoldScans THEN
+		ScanCount := 0;
+		Expected  := 4;
+		Actual	  := EndTest(4);
+		TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Test_Order_5" Id="{c2f38495-e0a1-4507-b1b8-3b4c5d6e7f89}">
+      <Declaration><![CDATA[METHOD Test_Order_5
+VAR_INST
+	Expected  : DINT;
+	Actual	  : DINT;
+	ScanCount : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TestSuite.Test(__POUNAME()).ExecuteTest() THEN
+	IF ScanCount = 0 THEN
+		BeginTest(5);
+	END_IF
+	ScanCount := ScanCount + 1;
+
+	IF ScanCount >= HoldScans THEN
+		ScanCount := 0;
+		Expected  := 5;
+		Actual	  := EndTest(5);
+		TestSuite.Test(__POUNAME()).AssertEqual(Expected, Actual);
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
